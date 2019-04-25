@@ -1,0 +1,168 @@
+fileFormatVersion: 2
+guid: abb8472e81653d14e858257b8bf79f86
+ModelImporter:
+  serializedVersion: 23
+  fileIDToRecycleName:
+    100000: House
+    100002: //RootNode
+    100004: Mesh1_Roof_Inner_Corner_Red_Model
+    100006: Mesh1_Roof_Inner_Corner_Red_Model_001
+    100008: Mesh1_Roof_Inner_Corner_Red_Model_002
+    100010: Mesh1_Roof_Inner_Corner_Red_Model_003
+    100012: Mesh1_Wood_Door_Square_Model
+    100014: Mesh1_Wood_Wall_Model
+    100016: Mesh1_Wood_Wall_Model_002
+    100018: Mesh1_Wood_Wall_Model_003
+    100020: Mesh1_Wood_Wall_Model_004
+    100022: Mesh1_Wood_Wall_Model_005
+    100024: Mesh1_Wood_Wall_Model_006
+    100026: Mesh1_Wood_Wall_Model_007
+    100028: Plane
+    400000: House
+    400002: //RootNode
+    400004: Mesh1_Roof_Inner_Corner_Red_Model
+    400006: Mesh1_Roof_Inner_Corner_Red_Model_001
+    400008: Mesh1_Roof_Inner_Corner_Red_Model_002
+    400010: Mesh1_Roof_Inner_Corner_Red_Model_003
+    400012: Mesh1_Wood_Door_Square_Model
+    400014: Mesh1_Wood_Wall_Model
+    400016: Mesh1_Wood_Wall_Model_002
+    400018: Mesh1_Wood_Wall_Model_003
+    400020: Mesh1_Wood_Wall_Model_004
+    400022: Mesh1_Wood_Wall_Model_005
+    400024: Mesh1_Wood_Wall_Model_006
+    400026: Mesh1_Wood_Wall_Model_007
+    400028: Plane
+    2100000: unnamed
+    2100002: Light_Stone_001
+    2100004: Red_Roof_001
+    2100006: Wood
+    2100008: Dark_Stone_003
+    2100010: Dark_Stone
+    2300000: Mesh1_Roof_Inner_Corner_Red_Model
+    2300002: Mesh1_Roof_Inner_Corner_Red_Model_001
+    2300004: Mesh1_Roof_Inner_Corner_Red_Model_002
+    2300006: Mesh1_Roof_Inner_Corner_Red_Model_003
+    2300008: Mesh1_Wood_Door_Square_Model
+    2300010: Mesh1_Wood_Wall_Model
+    2300012: Mesh1_Wood_Wall_Model_002
+    2300014: Mesh1_Wood_Wall_Model_003
+    2300016: Mesh1_Wood_Wall_Model_004
+    2300018: Mesh1_Wood_Wall_Model_005
+    2300020: Mesh1_Wood_Wall_Model_006
+    2300022: Mesh1_Wood_Wall_Model_007
+    2300024: Plane
+    3300000: Mesh1_Roof_Inner_Corner_Red_Model
+    3300002: Mesh1_Roof_Inner_Corner_Red_Model_001
+    3300004: Mesh1_Roof_Inner_Corner_Red_Model_002
+    3300006: Mesh1_Roof_Inner_Corner_Red_Model_003
+    3300008: Mesh1_Wood_Door_Square_Model
+    3300010: Mesh1_Wood_Wall_Model
+    3300012: Mesh1_Wood_Wall_Model_002
+    3300014: Mesh1_Wood_Wall_Model_003
+    3300016: Mesh1_Wood_Wall_Model_004
+    3300018: Mesh1_Wood_Wall_Model_005
+    3300020: Mesh1_Wood_Wall_Model_006
+    3300022: Mesh1_Wood_Wall_Model_007
+    3300024: Plane
+    4300000: Plane
+    4300002: Mesh1_Roof_Inner_Corner_Red_Model_003
+    4300004: Mesh1_Roof_Inner_Corner_Red_Model_002
+    4300006: Mesh1_Roof_Inner_Corner_Red_Model_001
+    4300008: Mesh1_Roof_Inner_Corner_Red_Model
+    4300010: Mesh1_Wood_Door_Square_Model
+    4300012: Mesh1_Wood_Wall_Model_007
+    4300014: Mesh1_Wood_Wall_Model_006
+    4300016: Mesh1_Wood_Wall_Model_005
+    4300018: Mesh1_Wood_Wall_Model_004
+    4300020: Mesh1_Wood_Wall_Model_003
+    4300022: Mesh1_Wood_Wall_Model_002
+    4300024: Mesh1_Wood_Wall_Model
+    7400000: Default Take
+    9500000: //RootNode
+  externalObjects: {}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    previousCalculatedGlobalScale: 1
+    hasPreviousCalculatedGlobalScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
