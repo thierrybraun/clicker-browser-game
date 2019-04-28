@@ -5,6 +5,7 @@ using UnityEngine;
 public class GameController : MonoBehaviour
 {
     public CityLoader CityLoader;
+    private IAPI api = new DummyAPI();
 
     private void Start()
     {
@@ -14,6 +15,6 @@ public class GameController : MonoBehaviour
             return;
         }
 
-        CityLoader.LoadTerrain();
+        api.GetCity(0, CityLoader.LoadCity);
     }
 }

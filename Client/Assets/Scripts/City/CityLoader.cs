@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Model;
+using System.Linq;
 
 public class CityLoader : MonoBehaviour
 {
@@ -15,15 +17,18 @@ public class CityLoader : MonoBehaviour
         }
     }
 
-    public void LoadTerrain()
+    public void LoadCity(City map)
     {
-        int mapSize = 10;
-        for (int i = 0; i < mapSize; i++)
+        var rand = new System.Random(0);
+        for (int i = 0; i < map.height; i++)
         {
-            for (int j = 0; j < mapSize; j++)
+            for (int j = 0; j < map.width; j++)
             {
-                var tile = Instantiate<GameObject>(TerrainProvider.Flat);
+                var field = map.fields.First(f => f.x == j && f.y == i);
+                var tile = Instantiate<GameObject>(TerrainProvider.GetTile(field.fieldType));
                 tile.transform.position = new Vector3(j * TerrainProvider.TILE_SIZE, 0, i * TerrainProvider.TILE_SIZE);
+                var rot = rand.Next(4);
+                tile.transform.Rotate(new Vector3(0, 0, rot * 90));
                 tile.name = "Tile_" + j + "_" + i;
             }
         }
