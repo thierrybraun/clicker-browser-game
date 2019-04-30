@@ -27,10 +27,14 @@ public class RemoteAPI : IAPI
             callback(res);
         }
     }
-    
+
     public void GetCity(long id, Action<City> callback)
     {
         GetRequest("/city/" + id, callback);
     }
 
+    public void CreateBuilding(long cityId, int building, int x, int y, Action<CreateBuildingResponse> callback)
+    {
+        throw new NotImplementedException();
+    }
 }

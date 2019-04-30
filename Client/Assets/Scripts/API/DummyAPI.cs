@@ -1,11 +1,20 @@
 ﻿using Model;
 using System;
+using System.Collections.Generic;
 
 public class DummyAPI : IAPI
 {
-    public void GetCity(long id, Action<City> callback)
+    private const int width = 10, height = 10;
+    private IDictionary<long, City> cities;
+
+    public DummyAPI()
     {
-        int width = 10, height = 10;
+        cities = new Dictionary<long, City>();
+        cities.Add(0, CreateCity(0));
+    }
+
+    private City CreateCity(long id)
+    {
         var city = new City();
         Field[] fields = new Field[10 * 10];
         var random = new Random((int)id);
@@ -52,6 +61,33 @@ public class DummyAPI : IAPI
         city.width = width;
         city.height = height;
         city.fields = fields;
-        callback(city);
+        return city;
+    }
+
+    public void CreateBuilding(long cityId, int building, int x, int y, Action<CreateBuildingResponse> callback)
+    {
+        try
+        {
+            var city = cities[cityId];
+            city.fields[y * height + x].buildingType = ((BuildingType[])Enum.GetValues(typeof(BuildingType)))[building];
+
+            callback(new CreateBuildingResponse
+            {
+                Success = true
+            });
+        }
+        catch (Exception e)
+        {
+            callback(new CreateBuildingResponse
+            {
+                Success = false,
+                Error = e.Message
+            });
+        }
+    }
+
+    public void GetCity(long cityId, Action<City> callback)
+    {
+        callback(cities[cityId]);
     }
 }
