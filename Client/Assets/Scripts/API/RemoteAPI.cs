@@ -28,12 +28,22 @@ public class RemoteAPI : IAPI
         }
     }
 
-    public void GetCity(long id, Action<City> callback)
+    public void GetCity(long id, Action<GetCityResponse> callback)
     {
         GetRequest("/city/" + id, callback);
     }
 
     public void CreateBuilding(long cityId, int building, int x, int y, Action<CreateBuildingResponse> callback)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void GetPlayer(long playerId, Action<GetPlayerResponse> callback)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void GetCityForPlayer(long playerId, Action<GetCityResponse> callback)
     {
         throw new NotImplementedException();
     }

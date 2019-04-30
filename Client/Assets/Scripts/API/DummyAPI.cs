@@ -6,16 +6,25 @@ public class DummyAPI : IAPI
 {
     private const int width = 10, height = 10;
     private IDictionary<long, City> cities;
+    private IDictionary<long, Player> players;
 
     public DummyAPI()
     {
-        cities = new Dictionary<long, City>();
-        cities.Add(0, CreateCity(0));
+        cities = new Dictionary<long, City>
+        {
+            { 0, CreateCity(0) }
+        };
+
+        players = new Dictionary<long, Player>
+        {
+            { 0, new Player { Id = 0, Name = "Player1" } }
+        };
     }
 
     private City CreateCity(long id)
     {
         var city = new City();
+        city.Id = id;
         Field[] fields = new Field[10 * 10];
         var random = new Random((int)id);
         for (int i = 0; i < height; i++)
@@ -86,8 +95,35 @@ public class DummyAPI : IAPI
         }
     }
 
-    public void GetCity(long cityId, Action<City> callback)
+    public void GetCity(long cityId, Action<GetCityResponse> callback)
     {
-        callback(cities[cityId]);
+        callback(new GetCityResponse { Success = true, City = cities[cityId] });
+    }
+
+    public void GetPlayer(long playerId, Action<GetPlayerResponse> callback)
+    {
+        try
+        {
+            var p = players[playerId];
+
+            callback(new GetPlayerResponse
+            {
+                Success = true,
+                Player = p
+            });
+        }
+        catch (Exception e)
+        {
+            callback(new GetPlayerResponse
+            {
+                Success = false,
+                Error = e.Message
+            });
+        }
+    }
+
+    public void GetCityForPlayer(long playerId, Action<GetCityResponse> callback)
+    {
+        callback(new GetCityResponse { Success = true, City = cities[playerId] });
     }
 }

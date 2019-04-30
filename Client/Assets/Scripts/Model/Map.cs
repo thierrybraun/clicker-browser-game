@@ -3,6 +3,7 @@
     [System.Serializable]
     public struct City
     {
+        public long Id;
         public int width, height;
         public Field[] fields; 
     }
