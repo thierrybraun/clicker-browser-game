@@ -28,7 +28,7 @@ public class CityLoader : MonoBehaviour
                 var tile = Instantiate<GameObject>(TerrainProvider.GetTile(field.fieldType));
                 tile.transform.position = new Vector3(j * TerrainProvider.TILE_SIZE, 0, i * TerrainProvider.TILE_SIZE);
                 var rot = rand.Next(4);
-                tile.transform.Rotate(new Vector3(0, 0, rot * 90));
+                tile.transform.Rotate(new Vector3(0, rot * 90, 0), Space.World);
                 tile.name = "Tile_" + j + "_" + i;
             }
         }
