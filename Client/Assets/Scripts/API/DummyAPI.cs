@@ -19,6 +19,33 @@ public class DummyAPI : IAPI
                 field.x = j;
                 field.y = i;
                 field.fieldType = types[random.Next() % types.Length];
+
+                switch (field.fieldType)
+                {
+                    case FieldType.Plain:
+                        if (random.NextDouble() < 0.3d)
+                        {
+                            field.resourceType = ResourceType.Apples;
+                        }
+                        else if (random.NextDouble() > 0.6d)
+                        {
+                            field.resourceType = ResourceType.Forest;
+                        }
+                        break;
+                    case FieldType.Water:
+                        if (random.NextDouble() > 0.5d)
+                        {
+                            field.resourceType = ResourceType.Fish;
+                        }
+                        break;
+                    case FieldType.Hills:
+                        if (random.NextDouble() > 0.5d)
+                        {
+                            field.resourceType = ResourceType.Ore;
+                        }
+                        break;
+                }
+
                 fields[i * height + j] = field;
             }
         }

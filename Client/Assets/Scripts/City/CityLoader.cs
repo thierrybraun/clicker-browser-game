@@ -1,21 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using Model;
 using System.Linq;
 
 public class CityLoader : MonoBehaviour
 {
-    public TerrainProvider TerrainProvider;
-
-    private void Start()
-    {
-        if (!TerrainProvider)
-        {
-            Debug.LogError("TerrainProvider not found");
-            return;
-        }
-    }
+    public static int TILE_SIZE = 10;
+    public GameObject Flat, Water, Hills;
+    public GameObject House, Applefarm, Lumberjack, Fishingboat, Mine;
+    public GameObject Apples, Fish, Forest, Ore;
 
     public void LoadCity(City map)
     {
@@ -25,12 +17,49 @@ public class CityLoader : MonoBehaviour
             for (int j = 0; j < map.width; j++)
             {
                 var field = map.fields.First(f => f.x == j && f.y == i);
-                var tile = Instantiate<GameObject>(TerrainProvider.GetTile(field.fieldType));
-                tile.transform.position = new Vector3(j * TerrainProvider.TILE_SIZE, 0, i * TerrainProvider.TILE_SIZE);
+                var tile = Instantiate<GameObject>(GetTile(field.fieldType));
+                tile.transform.position = new Vector3(j * TILE_SIZE, 0, i * TILE_SIZE);
                 var rot = rand.Next(4);
-                tile.transform.Rotate(new Vector3(0, rot * 90, 0), Space.World);
+                tile.transform.GetChild(0).Rotate(new Vector3(0, rot * 90, 0), Space.World);
                 tile.name = "Tile_" + j + "_" + i;
+
+                var resourceType = field.resourceType;
+                if (resourceType.HasValue)
+                {
+                    var resource = Instantiate<GameObject>(GetResource(resourceType.Value));
+                    resource.transform.SetParent(tile.transform, false);
+                }
             }
         }
+    }
+
+    private GameObject GetTile(FieldType type)
+    {
+        switch (type)
+        {
+            case FieldType.Plain:
+                return Flat;
+            case FieldType.Water:
+                return Water;
+            case FieldType.Hills:
+                return Hills;
+        }
+        throw new System.Exception("No type defined: " + type);
+    }
+
+    private GameObject GetResource(ResourceType type)
+    {
+        switch (type)
+        {
+            case ResourceType.Apples:
+                return Apples;
+            case ResourceType.Fish:
+                return Fish;
+            case ResourceType.Forest:
+                return Forest;
+            case ResourceType.Ore:
+                return Ore;
+        }
+        throw new System.Exception("No type defined: " + type);
     }
 }

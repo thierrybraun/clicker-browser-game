@@ -181,52 +181,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!1 &476804900
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 476804903}
-  - component: {fileID: 476804902}
-  m_Layer: 0
-  m_Name: TerrainProvider
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &476804902
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 476804900}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1536e5c9b8cd7b84fb783fa5a3e4e79c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Flat: {fileID: 4147458466963919104, guid: 7abc9885cea1b3242a75931d2f77a664, type: 3}
-  Water: {fileID: 3203759104140870981, guid: 6e1e0b1c38308b34e85c11cb44783685, type: 3}
-  Hills: {fileID: 6489216985858828564, guid: 88ab4f9bfb862fe4a88e41e18635b075, type: 3}
---- !u!4 &476804903
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 476804900}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -14.364189, y: 14.004265, z: -6.1767464}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &534669902
 GameObject:
   m_ObjectHideFlags: 0
@@ -354,7 +308,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbefa17f38a95e947bcf90c32fc85f19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TerrainProvider: {fileID: 476804902}
+  Flat: {fileID: 4147458466963919104, guid: 7abc9885cea1b3242a75931d2f77a664, type: 3}
+  Water: {fileID: 3203759104140870981, guid: 6e1e0b1c38308b34e85c11cb44783685, type: 3}
+  Hills: {fileID: 6489216985858828564, guid: 88ab4f9bfb862fe4a88e41e18635b075, type: 3}
+  House: {fileID: 9028325471899107539, guid: 1d4f60daebd7cce409246d500c2daccf, type: 3}
+  Applefarm: {fileID: 916643436200392399, guid: ee3e7149e3b07eb43836ad4c052a834d,
+    type: 3}
+  Lumberjack: {fileID: 703190175121711158, guid: 3817a98ae977a91428889f90a0d4f576,
+    type: 3}
+  Fishingboat: {fileID: 637069949442868627, guid: 36925d23ac3f0e744ac8a0b7ca6b4e27,
+    type: 3}
+  Mine: {fileID: 4462085264712830463, guid: 35030cd4703711841876994f1afe6305, type: 3}
+  Apples: {fileID: 5185826076261573114, guid: 93dde87ba3083da459660c1b098e6e05, type: 3}
+  Fish: {fileID: 5431817386874333239, guid: 87cb8d222cc2b5d47a060f939c6e0b58, type: 3}
+  Forest: {fileID: 6212903018460090036, guid: b043821c765a1e7439349d4e242b92f4, type: 3}
+  Ore: {fileID: 2338579163241492939, guid: 41b7d2b83b355ec4284692a95eca338f, type: 3}
 --- !u!4 &619840851
 Transform:
   m_ObjectHideFlags: 0
@@ -367,7 +335,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &931334275
 GameObject:
@@ -411,5 +379,5 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

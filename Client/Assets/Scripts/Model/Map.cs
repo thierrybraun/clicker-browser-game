@@ -5,6 +5,7 @@
     {
         public int width, height;
         public Field[] fields;
+        public Building[] buildings;        
     }
 
     [System.Serializable]
@@ -12,6 +13,13 @@
     {
         public int x, y;
         public FieldType fieldType;
+        public ResourceType? resourceType;
     }
 
+    [System.Serializable]
+    public struct Building
+    {
+        public int x, y;
+        public BuildingType buildingType;
+    }
 }
