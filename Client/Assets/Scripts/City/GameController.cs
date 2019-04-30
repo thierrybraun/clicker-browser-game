@@ -7,7 +7,7 @@ public class GameController : MonoBehaviour
 {
     public CityLoader CityLoader;
     private IAPI api = new DummyAPI();
-    private Player MyPlayer;
+    public Player MyPlayer;
     private long CurrentCityId;
 
     private void Start()

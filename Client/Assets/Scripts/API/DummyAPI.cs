@@ -17,7 +17,7 @@ public class DummyAPI : IAPI
 
         players = new Dictionary<long, Player>
         {
-            { 0, new Player { Id = 0, Name = "Player1" } }
+            { 0, new Player { Id = 0, Name = "Player1", Wood = 100 } }
         };
     }
 
