@@ -11,6 +11,7 @@ public class CityLoader : MonoBehaviour
 
     public void LoadCity(City map)
     {
+        GameObject terrain = new GameObject("Terrain");
         var rand = new System.Random(0);
         for (int i = 0; i < map.height; i++)
         {
@@ -18,19 +19,30 @@ public class CityLoader : MonoBehaviour
             {
                 var field = map.fields.First(f => f.x == j && f.y == i);
                 var tile = Instantiate<GameObject>(GetTile(field.fieldType));
+                tile.transform.SetParent(terrain.transform);
                 tile.transform.position = new Vector3(j * TILE_SIZE, 0, i * TILE_SIZE);
                 var rot = rand.Next(4);
                 tile.transform.GetChild(0).Rotate(new Vector3(0, rot * 90, 0), Space.World);
                 tile.name = "Tile_" + j + "_" + i;
 
-                var resourceType = field.resourceType;
-                if (resourceType.HasValue)
+                var buildingType = field.buildingType;
+                if (buildingType.HasValue)
                 {
-                    var resource = Instantiate<GameObject>(GetResource(resourceType.Value));
-                    resource.transform.SetParent(tile.transform, false);
+                    var model = Instantiate(GetBuilding(buildingType.Value));
+                    model.transform.SetParent(tile.transform, false);
+                }
+                else
+                {
+                    var resourceType = field.resourceType;
+                    if (resourceType.HasValue)
+                    {
+                        var resource = Instantiate<GameObject>(GetResource(resourceType.Value));
+                        resource.transform.SetParent(tile.transform, false);
+                    }
                 }
             }
         }
+
     }
 
     private GameObject GetTile(FieldType type)
@@ -59,6 +71,24 @@ public class CityLoader : MonoBehaviour
                 return Forest;
             case ResourceType.Ore:
                 return Ore;
+        }
+        throw new System.Exception("No type defined: " + type);
+    }
+
+    private GameObject GetBuilding(BuildingType type)
+    {
+        switch (type)
+        {
+            case BuildingType.Applefarm:
+                return Applefarm;
+            case BuildingType.Fishingboat:
+                return Fishingboat;
+            case BuildingType.House:
+                return House;
+            case BuildingType.Lumberjack:
+                return Lumberjack;
+            case BuildingType.Mine:
+                return Mine;
         }
         throw new System.Exception("No type defined: " + type);
     }

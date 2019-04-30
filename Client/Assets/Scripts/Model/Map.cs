@@ -4,8 +4,7 @@
     public struct City
     {
         public int width, height;
-        public Field[] fields;
-        public Building[] buildings;        
+        public Field[] fields; 
     }
 
     [System.Serializable]
@@ -14,12 +13,7 @@
         public int x, y;
         public FieldType fieldType;
         public ResourceType? resourceType;
+        public BuildingType? buildingType;
     }
 
-    [System.Serializable]
-    public struct Building
-    {
-        public int x, y;
-        public BuildingType buildingType;
-    }
 }
