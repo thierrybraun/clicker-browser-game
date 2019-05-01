@@ -5,7 +5,8 @@
     {
         public long Id;
         public int width, height;
-        public Field[] fields; 
+        public Field[] fields;
+        public int tickDuration;
     }
 
     [System.Serializable]
@@ -17,4 +18,10 @@
         public BuildingType? buildingType;
     }
 
+    [System.Serializable]
+    public struct ResourceStash
+    {
+        public int X, Y;
+        public int Food, Wood, Metal;        
+    }
 }

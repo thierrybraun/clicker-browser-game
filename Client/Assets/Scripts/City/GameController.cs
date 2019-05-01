@@ -8,7 +8,9 @@ public class GameController : MonoBehaviour
     public CityLoader CityLoader;
     private IAPI api = new DummyAPI();
     public Player MyPlayer;
-    private long CurrentCityId;
+    private long? CurrentCityId;
+    private DateTime? lastResourceUpdate = null;
+    private int? tickDuration;
 
     private void Start()
     {
@@ -19,6 +21,21 @@ public class GameController : MonoBehaviour
         }
 
         api.GetPlayer(0, LoadPlayer);
+    }
+
+    private void Update()
+    {
+        if (lastResourceUpdate.HasValue && CurrentCityId.HasValue && tickDuration.HasValue && DateTime.UtcNow.Subtract(lastResourceUpdate.Value) > TimeSpan.FromSeconds(tickDuration.Value))
+        {
+            api.GetResources(CurrentCityId.Value, GetResources);
+        }
+    }
+
+    private void GetResources(GetResourcesResponse res)
+    {
+        Debug.Log("GetResources: " + res.LastResourceUpdate + "\n" + JsonUtility.ToJson(res, true));
+        //lastResourceUpdate = DateTime.Parse(res.LastResourceUpdate);
+        lastResourceUpdate = DateTime.UtcNow;
     }
 
     private void LoadPlayer(GetPlayerResponse resp)
@@ -35,17 +52,19 @@ public class GameController : MonoBehaviour
     {
         Debug.Log("LoadCity\n" + JsonUtility.ToJson(res, true));
         CurrentCityId = res.City.Id;
+        tickDuration = res.City.tickDuration;
         CityLoader.LoadCity(res.City);
+        api.GetResources(res.City.Id, GetResources);
     }
 
     public void Build(BuildingType building, int x, int y)
     {
-        api.CreateBuilding(CurrentCityId, (int)building, x, y, res =>
+        api.CreateBuilding(CurrentCityId.Value, (int)building, x, y, res =>
         {
             Debug.Log("Build\n" + JsonUtility.ToJson(res, true));
             if (res.Success)
             {
-                api.GetCity(CurrentCityId, LoadCity);
+                api.GetCity(CurrentCityId.Value, LoadCity);
             }
         });
     }
