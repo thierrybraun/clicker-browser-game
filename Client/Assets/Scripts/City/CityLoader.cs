@@ -45,17 +45,17 @@ public class CityLoader : MonoBehaviour
                 tile.name = "Tile_" + j + "_" + i;
 
                 var buildingType = field.buildingType;
-                if (buildingType.HasValue)
+                if (buildingType != BuildingType.None)
                 {
-                    var model = Instantiate(GetBuilding(buildingType.Value));
+                    var model = Instantiate(GetBuilding(buildingType));
                     model.transform.SetParent(tile.transform, false);
                 }
                 else
                 {
                     var resourceType = field.resourceType;
-                    if (resourceType.HasValue)
+                    if (resourceType != ResourceType.None)
                     {
-                        var resource = Instantiate<GameObject>(GetResource(resourceType.Value));
+                        var resource = Instantiate<GameObject>(GetResource(resourceType));
                         resource.transform.SetParent(tile.transform, false);
                     }
                 }

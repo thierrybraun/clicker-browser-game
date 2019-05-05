@@ -8,6 +8,7 @@ public interface IAPI
     void GetPlayer(long playerId, Action<GetPlayerResponse> callback);
     void GetCityForPlayer(long playerId, Action<GetCityResponse> callback);
     void GetResources(long cityId, Action<GetResourcesResponse> callback);
+    void CollectResources(long currentCityId, int x, int y, Action<CollectResourcesResponse> callback);
 }
 
 public struct GetCityResponse
@@ -36,4 +37,12 @@ public struct GetResourcesResponse
     public string Error;
     public string LastResourceUpdate;
     public ResourceStash[] Resources;
+}
+
+public struct CollectResourcesResponse
+{
+    public ResourceStash Resources;
+    public Player Player;
+    public bool Success;
+    public string Error;
 }

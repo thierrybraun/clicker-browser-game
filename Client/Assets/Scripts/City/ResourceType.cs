@@ -1,4 +1,4 @@
 ﻿public enum ResourceType
 {
-    Apples, Fish, Forest, Ore
+    None, Apples, Fish, Forest, Ore
 }

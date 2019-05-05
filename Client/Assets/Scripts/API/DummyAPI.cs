@@ -1,6 +1,7 @@
 ﻿using Model;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public class DummyAPI : IAPI
 {
@@ -157,41 +158,39 @@ public class DummyAPI : IAPI
         var res = new List<ResourceStash>();
         foreach (var tile in city.fields)
         {
-            if (tile.buildingType.HasValue)
+            var stash = resourceStashes[cityId][tile.y, tile.x];
+
+            switch (tile.buildingType)
             {
-                var stash = resourceStashes[cityId][tile.y, tile.x];
-
-                switch (tile.buildingType.Value)
-                {
-                    case BuildingType.Applefarm:
-                        stash.Food += GetPassedTicks(lastUpdateTime, lastQuery);
-                        break;
-                    case BuildingType.Fishingboat:
-                        stash.Food += GetPassedTicks(lastUpdateTime, lastQuery);
-                        break;
-                    case BuildingType.House:
-                        //Food += GetPassedTicks(lastQuery, lastUpdateTime);
-                        break;
-                    case BuildingType.Lumberjack:
-                        stash.Wood += GetPassedTicks(lastUpdateTime, lastQuery);
-                        break;
-                    case BuildingType.Mine:
-                        stash.Metal += GetPassedTicks(lastUpdateTime, lastQuery);
-                        break;
-                }
-
-                resourceStashes[cityId][tile.y, tile.x] = stash;
-
-                var d = new ResourceStash
-                {
-                    X = tile.x,
-                    Y = tile.y,
-                    Wood = stash.Wood,
-                    Food = stash.Food,
-                    Metal = stash.Metal
-                };
-                res.Add(d);
+                case BuildingType.Applefarm:
+                    stash.Food += GetPassedTicks(lastUpdateTime, lastQuery);
+                    break;
+                case BuildingType.Fishingboat:
+                    stash.Food += GetPassedTicks(lastUpdateTime, lastQuery);
+                    break;
+                case BuildingType.House:
+                    //Food += GetPassedTicks(lastQuery, lastUpdateTime);
+                    break;
+                case BuildingType.Lumberjack:
+                    stash.Wood += GetPassedTicks(lastUpdateTime, lastQuery);
+                    break;
+                case BuildingType.Mine:
+                    stash.Metal += GetPassedTicks(lastUpdateTime, lastQuery);
+                    break;
             }
+
+            resourceStashes[cityId][tile.y, tile.x] = stash;
+
+            var d = new ResourceStash
+            {
+                X = tile.x,
+                Y = tile.y,
+                Wood = stash.Wood,
+                Food = stash.Food,
+                Metal = stash.Metal
+            };
+            res.Add(d);
+
         }
 
         callback(new GetResourcesResponse
@@ -206,5 +205,31 @@ public class DummyAPI : IAPI
     {
         return last.Subtract(now).Seconds / tickDuration;
     }
-    
+
+    public void CollectResources(long currentCityId, int x, int y, Action<CollectResourcesResponse> callback)
+    {
+        var field = cities[currentCityId].fields.Where(f => f.x == x && f.y == y);
+
+        var stash = resourceStashes[currentCityId][y, x];
+
+        var player = players[currentCityId];
+        player.Food += stash.Food;
+        player.Wood += stash.Wood;
+        player.Metal += stash.Metal;
+
+        stash.Food = 0;
+        stash.Wood = 0;
+        stash.Metal = 0;
+        stash.X = x;
+        stash.Y = y;
+
+        resourceStashes[currentCityId][y, x] = stash;
+
+        callback(new CollectResourcesResponse
+        {
+            Success = true,
+            Resources = stash,
+            Player = player
+        });
+    }
 }

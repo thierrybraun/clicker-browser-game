@@ -1,4 +1,4 @@
 ﻿public enum BuildingType
 {
-    House, Applefarm, Fishingboat, Lumberjack, Mine
+    None, House, Applefarm, Fishingboat, Lumberjack, Mine
 }

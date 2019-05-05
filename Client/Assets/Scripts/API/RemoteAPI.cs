@@ -52,4 +52,9 @@ public class RemoteAPI : IAPI
     {
         throw new NotImplementedException();
     }
+
+    public void CollectResources(long currentCityId, int x, int y, Action<CollectResourcesResponse> callback)
+    {
+        throw new NotImplementedException();
+    }
 }

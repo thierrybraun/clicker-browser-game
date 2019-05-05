@@ -14,8 +14,8 @@
     {
         public int x, y;
         public FieldType fieldType;
-        public ResourceType? resourceType;
-        public BuildingType? buildingType;
+        public ResourceType resourceType;
+        public BuildingType buildingType;
     }
 
     [System.Serializable]
