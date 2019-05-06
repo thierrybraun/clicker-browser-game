@@ -33,8 +33,7 @@ public class GameController : MonoBehaviour
     private void GetResources(GetResourcesResponse res)
     {
         Debug.Log("GetResources: " + res.LastResourceUpdate + "\n" + JsonUtility.ToJson(res, true));
-        //lastResourceUpdate = DateTime.Parse(res.LastResourceUpdate);
-        State.LastResourceUpdate = DateTime.UtcNow;
+        State.LastResourceUpdate = DateTime.Parse(res.LastResourceUpdate);
         State.ResourceCollection = res.Resources.ToList();
     }
 
