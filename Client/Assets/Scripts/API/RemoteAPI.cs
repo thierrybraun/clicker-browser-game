@@ -4,57 +4,60 @@ using UnityEngine.Networking;
 using Model;
 using System;
 
-public class RemoteAPI : IAPI
+namespace API
 {
-    private string endpoint = "http://localhost/api/v1";
-
-    private IEnumerator GetRequest<T>(string uri, Action<T> callback)
+    public class RemoteAPI : IAPI
     {
-        string url = endpoint + uri;
-        Debug.Log("GET " + url);
-        UnityWebRequest request = UnityWebRequest.Get(url);
-        yield return request.SendWebRequest();
+        private string endpoint = "http://localhost/api/v1";
 
-        if (request.isNetworkError || request.isHttpError)
+        private IEnumerator GetRequest<T>(string uri, Action<T> callback)
         {
-            Debug.Log(request.error);
+            string url = endpoint + uri;
+            Debug.Log("GET " + url);
+            UnityWebRequest request = UnityWebRequest.Get(url);
+            yield return request.SendWebRequest();
+
+            if (request.isNetworkError || request.isHttpError)
+            {
+                Debug.Log(request.error);
+            }
+            else
+            {
+                // Show results as text
+                Debug.Log(request.downloadHandler.text);
+                T res = JsonUtility.FromJson<T>(request.downloadHandler.text);
+                callback(res);
+            }
         }
-        else
+
+        public void GetCity(long id, Action<GetCityResponse> callback)
         {
-            // Show results as text
-            Debug.Log(request.downloadHandler.text);
-            T res = JsonUtility.FromJson<T>(request.downloadHandler.text);
-            callback(res);
+            GetRequest("/city/" + id, callback);
         }
-    }
 
-    public void GetCity(long id, Action<GetCityResponse> callback)
-    {
-        GetRequest("/city/" + id, callback);
-    }
+        public void CreateBuilding(long cityId, int building, int x, int y, Action<CreateBuildingResponse> callback)
+        {
+            throw new NotImplementedException();
+        }
 
-    public void CreateBuilding(long cityId, int building, int x, int y, Action<CreateBuildingResponse> callback)
-    {
-        throw new NotImplementedException();
-    }
+        public void GetPlayer(long playerId, Action<GetPlayerResponse> callback)
+        {
+            throw new NotImplementedException();
+        }
 
-    public void GetPlayer(long playerId, Action<GetPlayerResponse> callback)
-    {
-        throw new NotImplementedException();
-    }
+        public void GetCityForPlayer(long playerId, Action<GetCityResponse> callback)
+        {
+            throw new NotImplementedException();
+        }
 
-    public void GetCityForPlayer(long playerId, Action<GetCityResponse> callback)
-    {
-        throw new NotImplementedException();
-    }
+        public void GetResources(long cityId, Action<GetResourcesResponse> callback)
+        {
+            throw new NotImplementedException();
+        }
 
-    public void GetResources(long cityId, Action<GetResourcesResponse> callback)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void CollectResources(long currentCityId, int x, int y, Action<CollectResourcesResponse> callback)
-    {
-        throw new NotImplementedException();
+        public void CollectResources(long currentCityId, int x, int y, Action<CollectResourcesResponse> callback)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
