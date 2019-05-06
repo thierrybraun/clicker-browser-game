@@ -8,13 +8,8 @@ using API;
 public class GameController : MonoBehaviour
 {
     public CityLoader CityLoader;
+    private GameState State = GameState.Instance;
     public WorldUI WorldUI;
-    private IAPI api = new DummyAPI();
-    public Player MyPlayer;
-    private long? CurrentCityId;
-    private DateTime? lastResourceUpdate = null;
-    private int? tickDuration;
-    public IList<Model.ResourceStash> ResourceCollection = new List<Model.ResourceStash>();
 
     private void Start()
     {
@@ -24,14 +19,14 @@ public class GameController : MonoBehaviour
             return;
         }
 
-        api.GetPlayer(0, LoadPlayer);
+        State.Api.GetPlayer(0, LoadPlayer);
     }
 
     private void Update()
     {
-        if (lastResourceUpdate.HasValue && CurrentCityId.HasValue && tickDuration.HasValue && DateTime.UtcNow.Subtract(lastResourceUpdate.Value) > TimeSpan.FromSeconds(tickDuration.Value))
+        if (State.LastResourceUpdate.HasValue && State.CurrentCityId.HasValue && State.TickDuration.HasValue && DateTime.UtcNow.Subtract(State.LastResourceUpdate.Value) > TimeSpan.FromSeconds(State.TickDuration.Value))
         {
-            api.GetResources(CurrentCityId.Value, GetResources);
+            State.Api.GetResources(State.CurrentCityId.Value, GetResources);
         }
     }
 
@@ -39,23 +34,8 @@ public class GameController : MonoBehaviour
     {
         Debug.Log("GetResources: " + res.LastResourceUpdate + "\n" + JsonUtility.ToJson(res, true));
         //lastResourceUpdate = DateTime.Parse(res.LastResourceUpdate);
-        lastResourceUpdate = DateTime.UtcNow;
-        ResourceCollection = res.Resources.ToList();
-    }
-
-    public void Collect(int x, int y)
-    {
-        api.CollectResources(CurrentCityId.Value, x, y, OnCollected);
-    }
-
-    private void OnCollected(CollectResourcesResponse res)
-    {
-        Debug.Log("Collect: \n" + JsonUtility.ToJson(res, true));
-        var newStash = res.Resources;
-        var oldStash = ResourceCollection.Where(s => s.X == newStash.X && s.Y == newStash.Y).First();
-        ResourceCollection.Remove(oldStash);
-        ResourceCollection.Add(newStash);
-        MyPlayer = res.Player;
+        State.LastResourceUpdate = DateTime.UtcNow;
+        State.ResourceCollection = res.Resources.ToList();
     }
 
     private void LoadPlayer(GetPlayerResponse resp)
@@ -63,8 +43,8 @@ public class GameController : MonoBehaviour
         Debug.Log("LoadPlayer\n" + JsonUtility.ToJson(resp, true));
         if (resp.Success)
         {
-            MyPlayer = resp.Player;
-            api.GetCityForPlayer(MyPlayer.Id, LoadCity);
+            State.MyPlayer = resp.Player;
+            State.Api.GetCityForPlayer(State.MyPlayer.Id, LoadCity);
         }
     }
 
@@ -73,11 +53,11 @@ public class GameController : MonoBehaviour
         try
         {
             Debug.Log("LoadCity\n" + JsonUtility.ToJson(res, true));
-            CurrentCityId = res.City.Id;
-            tickDuration = res.City.tickDuration;
+            State.CurrentCityId = res.City.Id;
+            State.TickDuration = res.City.tickDuration;
             CityLoader.LoadCity(res.City);
             WorldUI.Setup(CityLoader.GetTiles());
-            api.GetResources(res.City.Id, GetResources);
+            State.Api.GetResources(res.City.Id, GetResources);
         }
         catch (Exception e)
         {
@@ -87,12 +67,12 @@ public class GameController : MonoBehaviour
 
     public void Build(Building building, int x, int y)
     {
-        api.CreateBuilding(CurrentCityId.Value, (int)building.ApiType, x, y, res =>
+        State.Api.CreateBuilding(State.CurrentCityId.Value, (int)building.ApiType, x, y, res =>
         {
             Debug.Log("Build\n" + JsonUtility.ToJson(res, true));
             if (res.Success)
             {
-                api.GetCity(CurrentCityId.Value, LoadCity);
+                State.Api.GetCity(State.CurrentCityId.Value, LoadCity);
             }
         });
     }

@@ -48,11 +48,14 @@ public class Tile : MonoBehaviour
     {
         if (EventSystem.current.IsPointerOverGameObject()) return;
 
-        Building building = Resource.Building;        
-
-        if (building)
+        if (Resource)
         {
-            gameController.Build(building, X, Y);
+            Building building = Resource.Building;
+
+            if (building)
+            {
+                gameController.Build(building, X, Y);
+            }
         }
     }
 }
