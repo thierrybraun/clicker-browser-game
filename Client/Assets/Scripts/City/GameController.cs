@@ -85,9 +85,9 @@ public class GameController : MonoBehaviour
         }
     }
 
-    public void Build(BuildingType building, int x, int y)
+    public void Build(Building building, int x, int y)
     {
-        api.CreateBuilding(CurrentCityId.Value, (int)building, x, y, res =>
+        api.CreateBuilding(CurrentCityId.Value, (int)building.ApiType, x, y, res =>
         {
             Debug.Log("Build\n" + JsonUtility.ToJson(res, true));
             if (res.Success)

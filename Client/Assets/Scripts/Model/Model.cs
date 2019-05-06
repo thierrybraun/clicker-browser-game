@@ -22,7 +22,16 @@
     public struct ResourceStash
     {
         public int X, Y;
-        public int Food, Wood, Metal;        
+        public int Food, Wood, Metal;
     }
 
+    public enum BuildingType
+    {
+        None, House, Applefarm, Fishingboat, Lumberjack, Mine
+    }
+
+    public enum ResourceType
+    {
+        None, Apples, Fish, Forest, Ore
+    }
 }

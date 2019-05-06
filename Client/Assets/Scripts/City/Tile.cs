@@ -6,8 +6,8 @@ public class Tile : MonoBehaviour
 {
     public int X, Y;
     public FieldType Field;
-    public ResourceType? Resource;
-    public BuildingType? Building;
+    public Resource Resource;
+    public Building Building;
 
     private GameController gameController;
 
@@ -48,26 +48,11 @@ public class Tile : MonoBehaviour
     {
         if (EventSystem.current.IsPointerOverGameObject()) return;
 
-        BuildingType? building = null;
-        switch (Resource)
-        {
-            case ResourceType.Apples:
-                building = BuildingType.Applefarm;
-                break;
-            case ResourceType.Fish:
-                building = BuildingType.Fishingboat;
-                break;
-            case ResourceType.Forest:
-                building = BuildingType.Lumberjack;
-                break;
-            case ResourceType.Ore:
-                building = BuildingType.Mine;
-                break;
-        }
+        Building building = Resource.Building;        
 
-        if (building.HasValue)
+        if (building)
         {
-            gameController.Build(building.Value, X, Y);
+            gameController.Build(building, X, Y);
         }
     }
 }
