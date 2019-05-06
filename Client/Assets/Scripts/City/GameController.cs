@@ -76,7 +76,7 @@ public class GameController : MonoBehaviour
             CurrentCityId = res.City.Id;
             tickDuration = res.City.tickDuration;
             CityLoader.LoadCity(res.City);
-            WorldUI.Setup(res.City);
+            WorldUI.Setup(CityLoader.GetTiles());
             api.GetResources(res.City.Id, GetResources);
         }
         catch (Exception e)

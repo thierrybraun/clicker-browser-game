@@ -5,4 +5,5 @@ public class Building : ScriptableObject
 {
     public Model.BuildingType ApiType;
     public GameObject Prefab;
+    public Sprite CollectionSprite;
 }

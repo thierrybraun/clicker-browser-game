@@ -13,6 +13,11 @@ public class CityLoader : MonoBehaviour
         terrain.transform.SetParent(transform);
     }
 
+    public Tile[] GetTiles()
+    {
+        return terrain.GetComponentsInChildren<Tile>();
+    }
+
     public void LoadCity(Model.City map)
     {
         try

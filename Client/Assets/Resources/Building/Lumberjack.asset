@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ApiType: 4
   Prefab: {fileID: 703190175121711158, guid: 3817a98ae977a91428889f90a0d4f576, type: 3}
+  CollectionSprite: {fileID: 21300000, guid: 0c270480216c17f44bdeee8d7055f883, type: 3}
