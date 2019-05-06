@@ -25,10 +25,4 @@
         public int Food, Wood, Metal;        
     }
 
-    [System.Serializable]
-    public enum ResourceType
-    {
-        None, Apples, Fish, Forest, Ore
-    }
-
 }
