@@ -2,7 +2,6 @@
 using System.Collections;
 using UnityEngine.EventSystems;
 using System;
-using System.Linq;
 
 public class Tile : MonoBehaviour
 {
@@ -10,6 +9,7 @@ public class Tile : MonoBehaviour
     public FieldType Field;
     public Resource Resource;
     public Building Building;
+    public Model.ResourceStash Stash = new Model.ResourceStash();
 
     private GameController gameController;
     private DateTime NextResourceUpdate = DateTime.UtcNow;
@@ -17,6 +17,7 @@ public class Tile : MonoBehaviour
 
     private void Start()
     {
+        WorldUI.Instance.Register(this);
         gameController = FindObjectOfType<GameController>();
         if (Building)
         {
@@ -36,11 +37,6 @@ public class Tile : MonoBehaviour
             {
                 gameController.Build(building, X, Y);
             }
-
-            if (Building)
-            {
-                Debug.Log(X + "," + Y + ":" + JsonUtility.ToJson(State.ResourceCollection.FirstOrDefault(s => s.X == X && s.Y == Y)));
-            }
         }
     }
 
@@ -55,11 +51,7 @@ public class Tile : MonoBehaviour
     {
         Debug.Log("GetResources " + X + "," + Y + "\n" + JsonUtility.ToJson(res, true));
         NextResourceUpdate = DateTime.Now.AddSeconds(res.SecondsUntilNextUpdate);
-        var stash = State.ResourceCollection.FirstOrDefault(s => s.X == X && s.Y == Y);
-        State.ResourceCollection.Remove(stash);
-        res.Resources.X = stash.X;
-        res.Resources.Y = stash.Y;
-        State.ResourceCollection.Add(res.Resources);
+        Stash = res.Resources;
 
         StartCoroutine("ResourceUpdateTimer");
     }

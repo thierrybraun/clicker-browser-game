@@ -39,7 +39,6 @@ public class GameController : MonoBehaviour
             Debug.Log("LoadCity\n" + JsonUtility.ToJson(res, true));
             State.LoadCity(res.City);
             CityLoader.LoadCity(res.City);
-            WorldUI.Setup(CityLoader.GetTiles());
         }
         catch (Exception e)
         {

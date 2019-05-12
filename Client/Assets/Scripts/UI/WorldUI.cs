@@ -1,32 +1,45 @@
 ﻿using UnityEngine;
-using Model;
+using System.Collections.Generic;
 
 public class WorldUI : MonoBehaviour
 {
+    public static WorldUI Instance;
     public GameObject Collectible;
     public Sprite Food, Wood, Metal;
 
-    public void Setup(Tile[] tiles)
+    private IDictionary<Tile, Collectible> Collectibles = new Dictionary<Tile, Collectible>();
+
+    void Awake()
+    {
+        if (Instance == null) Instance = this;
+        else if (Instance != this) Destroy(gameObject);
+    }
+
+    public void Reset()
     {
         for (int i = transform.childCount - 1; i >= 0; i--)
         {
             DestroyImmediate(transform.GetChild(i).gameObject);
         }
-
-        foreach (var tile in tiles)
-        {
-            Sprite sprite = tile.Building?.CollectionSprite;
-
-            if (sprite)
-            {
-                GameObject collectionPopup = Instantiate(Collectible, transform);
-                collectionPopup.name = "CollectionPopup_" + tile.X + "_" + tile.Y;
-                var collectible = collectionPopup.GetComponent<Collectible>();
-                collectible.Sprite = sprite;
-                collectible.Location = new Vector2Int(tile.X, tile.Y);
-                collectionPopup.transform.position = new Vector3(tile.X * 10, 0, tile.Y * 10);
-                collectionPopup.transform.localScale = Vector3.one / 10f;
-            }
-        }
     }
+
+    public void Register(Tile tile)
+    {
+        Sprite sprite = tile.Building?.CollectionSprite;
+
+        if (sprite)
+        {
+            Collectible collectible = Instantiate(Collectible, transform).GetComponent<Collectible>();
+            collectible.name = "CollectionPopup_" + tile.X + "_" + tile.Y;            
+            collectible.Sprite = sprite;
+            collectible.Tile = tile;
+
+            if (Collectibles.ContainsKey(tile))
+            {
+                DestroyImmediate(Collectibles[tile].gameObject);
+                Collectibles.Remove(tile);
+            }
+            Collectibles.Add(tile, collectible);
+        }
+    }    
 }

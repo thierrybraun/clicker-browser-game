@@ -6,11 +6,10 @@ using System.Linq;
 
 public class Collectible : MonoBehaviour
 {
-    public Vector2Int Location;
-
     public Text text;
     public Image icon;
     public GameObject background;
+    public Tile Tile;
 
     public Sprite Sprite
     {
@@ -22,44 +21,45 @@ public class Collectible : MonoBehaviour
 
     private void Start()
     {
+        background.SetActive(false);
         transform.localRotation = Quaternion.Euler(new Vector3(45f, 45f, 0f));
+        transform.localScale = Vector3.one / 10f;
     }
 
     private void Update()
     {
-        var stash = GameState.Instance.ResourceCollection.Where(s => s.X == Location.x && s.Y == Location.y).FirstOrDefault();
-        background.SetActive(true);
+        if (!Tile) return;
+        transform.position = new Vector3(Tile.X * 10, 0, Tile.Y * 10);
 
-        if (stash.Food > 0)
+        background.SetActive(false);
+        var Stash = Tile.Stash;
+
+        if (Stash.Food > 0)
         {
-            text.text = "+" + stash.Food;
+            text.text = "+" + Stash.Food;
+            background.SetActive(true);
         }
-        else if (stash.Wood > 0)
+        else if (Stash.Wood > 0)
         {
-            text.text = "+" + stash.Wood;
+            text.text = "+" + Stash.Wood;
+            background.SetActive(true);
         }
-        else if (stash.Metal > 0)
+        else if (Stash.Metal > 0)
         {
-            text.text = "+" + stash.Metal;
-        }
-        else
-        {
-            background.SetActive(false);
+            text.text = "+" + Stash.Metal;
+            background.SetActive(true);
         }
     }
 
     public void Collect()
     {
-        GameState.Instance.Api.CollectResources(GameState.Instance.CurrentCityId.Value, Location.x, Location.y, OnCollected);        
+        GameState.Instance.Api.CollectResources(GameState.Instance.CurrentCityId.Value, Tile.X, Tile.Y, OnCollected);
     }
 
     private void OnCollected(API.CollectResourcesResponse res)
     {
         Debug.Log("Collect: \n" + JsonUtility.ToJson(res, true));
-        var newStash = res.Resources;
-        var oldStash = GameState.Instance.ResourceCollection.Where(s => s.X == newStash.X && s.Y == newStash.Y).First();
-        GameState.Instance.ResourceCollection.Remove(oldStash);
-        GameState.Instance.ResourceCollection.Add(newStash);
+        Tile.Stash = res.Resources;
         GameState.Instance.MyPlayer = res.Player;
     }
 

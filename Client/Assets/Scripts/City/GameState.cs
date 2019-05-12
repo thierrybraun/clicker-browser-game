@@ -7,7 +7,6 @@ public class GameState
 {
     private static GameState instance;
 
-    public IList<Model.ResourceStash> ResourceCollection = new List<Model.ResourceStash>();
     public long? CurrentCityId;
     public Player MyPlayer;
     public IAPI Api = new DummyAPI();
@@ -35,15 +34,5 @@ public class GameState
     {
         CurrentCityId = city.Id;
         TickDuration = city.tickDuration;
-
-        ResourceCollection = new List<Model.ResourceStash>();
-        foreach (var f in city.fields)
-        {
-            ResourceCollection.Add(new ResourceStash
-            {
-                X = f.x,
-                Y = f.y
-            });
-        }
     }
 }
