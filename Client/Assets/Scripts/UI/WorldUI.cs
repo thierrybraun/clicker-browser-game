@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 public class WorldUI : MonoBehaviour
 {
     public static WorldUI Instance;
     public GameObject Collectible;
     public Sprite Food, Wood, Metal;
+    public BuildMenu BuildMenu;
 
     private IDictionary<Tile, Collectible> Collectibles = new Dictionary<Tile, Collectible>();
 
@@ -30,7 +32,7 @@ public class WorldUI : MonoBehaviour
         if (sprite)
         {
             Collectible collectible = Instantiate(Collectible, transform).GetComponent<Collectible>();
-            collectible.name = "CollectionPopup_" + tile.X + "_" + tile.Y;            
+            collectible.name = "CollectionPopup_" + tile.X + "_" + tile.Y;
             collectible.Sprite = sprite;
             collectible.Tile = tile;
 
@@ -41,5 +43,16 @@ public class WorldUI : MonoBehaviour
             }
             Collectibles.Add(tile, collectible);
         }
-    }    
+    }
+
+    public void HideMenues()
+    {
+        BuildMenu.gameObject.SetActive(false);
+    }
+
+    public void ShowBuildMenu(Tile tile)
+    {
+        BuildMenu.Tile = tile;
+        BuildMenu.gameObject.SetActive(true);
+    }
 }

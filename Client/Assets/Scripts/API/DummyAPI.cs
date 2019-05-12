@@ -29,7 +29,7 @@ namespace API
 
             players = new Dictionary<long, Player>
         {
-            { 0, new Player { Id = 0, Name = "Player1", Wood = 100 } }
+            { 0, new Player { Id = 0, Name = "Player1", Wood = 10 } }
         };
         }
 
@@ -95,18 +95,39 @@ namespace API
             try
             {
                 var city = cities[cityId];
-                city.fields[y * height + x].buildingType = ((BuildingType[])Enum.GetValues(typeof(BuildingType)))[building];
-                buildings[cityId][y, x] = new DbBuilding
-                {
-                    Stash = new ResourceStash(),
-                    BuildDate = DateTime.UtcNow,
-                    LastQuery = DateTime.UtcNow
-                };
+                var buildingType = ((BuildingType[])Enum.GetValues(typeof(BuildingType)))[building];
+                var cost = UnityEngine.Resources.Load<Building>("Building/" + buildingType.ToString()).BuildCostFunction.GetCost(1);
 
-                callback(new CreateBuildingResponse
+                var player = players[cityId];
+                if (player.Wood < cost.Wood || player.Metal < cost.Metal || player.Food < cost.Food)
                 {
-                    Success = true
-                });
+                    callback(new CreateBuildingResponse
+                    {
+                        Error = "Not enough resources",
+                        Success = false
+                    });
+                }
+                else
+                {
+                    player.Food -= cost.Food;
+                    player.Wood -= cost.Wood;
+                    player.Metal -= cost.Metal;
+                    players[cityId] = player;
+
+                    city.fields[y * height + x].buildingType = buildingType;
+                    buildings[cityId][y, x] = new DbBuilding
+                    {
+                        Stash = new ResourceStash(),
+                        BuildDate = DateTime.UtcNow,
+                        LastQuery = DateTime.UtcNow
+                    };
+
+                    callback(new CreateBuildingResponse
+                    {
+                        Player = player,
+                        Success = true
+                    });
+                }
             }
             catch (Exception e)
             {

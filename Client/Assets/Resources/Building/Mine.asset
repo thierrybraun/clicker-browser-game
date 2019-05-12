@@ -15,3 +15,4 @@ MonoBehaviour:
   ApiType: 5
   Prefab: {fileID: 4462085264712830463, guid: 35030cd4703711841876994f1afe6305, type: 3}
   CollectionSprite: {fileID: 21300000, guid: 637ff0d73455a454b840cc4299545657, type: 3}
+  BuildCostFunction: {fileID: 11400000, guid: db49bad3048b7bd4e9cbf220af376be4, type: 2}

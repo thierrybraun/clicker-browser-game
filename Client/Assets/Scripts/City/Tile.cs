@@ -30,6 +30,7 @@ public class Tile : MonoBehaviour
     {
         if (EventSystem.current.IsPointerOverGameObject()) return;
 
+        WorldUI.Instance.HideMenues();
         if (Building)
         {
             UI.Instance.ShowBuilding(this);
@@ -40,7 +41,7 @@ public class Tile : MonoBehaviour
 
             if (building)
             {
-                gameController.Build(building, X, Y);
+                WorldUI.Instance.ShowBuildMenu(this);
             }
         }
     }
