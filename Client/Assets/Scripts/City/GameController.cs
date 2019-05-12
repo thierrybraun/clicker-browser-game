@@ -22,21 +22,6 @@ public class GameController : MonoBehaviour
         State.Api.GetPlayer(0, LoadPlayer);
     }
 
-    private void Update()
-    {
-        if (State.LastResourceUpdate.HasValue && State.CurrentCityId.HasValue && State.TickDuration.HasValue && DateTime.UtcNow.Subtract(State.LastResourceUpdate.Value) > TimeSpan.FromSeconds(State.TickDuration.Value))
-        {
-            State.Api.GetResources(State.CurrentCityId.Value, GetResources);
-        }
-    }
-
-    private void GetResources(GetResourcesResponse res)
-    {
-        Debug.Log("GetResources: " + res.LastResourceUpdate + "\n" + JsonUtility.ToJson(res, true));
-        State.LastResourceUpdate = DateTime.Parse(res.LastResourceUpdate);
-        State.ResourceCollection = res.Resources.ToList();
-    }
-
     private void LoadPlayer(GetPlayerResponse resp)
     {
         Debug.Log("LoadPlayer\n" + JsonUtility.ToJson(resp, true));
@@ -52,11 +37,9 @@ public class GameController : MonoBehaviour
         try
         {
             Debug.Log("LoadCity\n" + JsonUtility.ToJson(res, true));
-            State.CurrentCityId = res.City.Id;
-            State.TickDuration = res.City.tickDuration;
+            State.LoadCity(res.City);
             CityLoader.LoadCity(res.City);
             WorldUI.Setup(CityLoader.GetTiles());
-            State.Api.GetResources(res.City.Id, GetResources);
         }
         catch (Exception e)
         {

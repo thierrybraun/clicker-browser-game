@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using API;
 using System;
+using Model;
 
 public class GameState
 {
@@ -27,6 +28,22 @@ public class GameState
                 instance = new GameState();
             }
             return instance;
+        }
+    }
+
+    public void LoadCity(City city)
+    {
+        CurrentCityId = city.Id;
+        TickDuration = city.tickDuration;
+
+        ResourceCollection = new List<Model.ResourceStash>();
+        foreach (var f in city.fields)
+        {
+            ResourceCollection.Add(new ResourceStash
+            {
+                X = f.x,
+                Y = f.y
+            });
         }
     }
 }

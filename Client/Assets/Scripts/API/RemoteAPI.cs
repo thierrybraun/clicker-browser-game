@@ -50,12 +50,12 @@ namespace API
             throw new NotImplementedException();
         }
 
-        public void GetResources(long cityId, Action<GetResourcesResponse> callback)
+        public void CollectResources(long currentCityId, int x, int y, Action<CollectResourcesResponse> callback)
         {
             throw new NotImplementedException();
         }
 
-        public void CollectResources(long currentCityId, int x, int y, Action<CollectResourcesResponse> callback)
+        public void GetStashForTile(long currentCityId, int x, int y, Action<GetStashForTileResponse> callback)
         {
             throw new NotImplementedException();
         }
