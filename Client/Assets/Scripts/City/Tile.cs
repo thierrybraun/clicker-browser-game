@@ -12,7 +12,8 @@ public class Tile : MonoBehaviour
     public Model.ResourceStash Stash = new Model.ResourceStash();
 
     private GameController gameController;
-    private DateTime NextResourceUpdate = DateTime.UtcNow;
+    private DateTime NextResourceUpdate = DateTime.Now;
+    private DateTime LastResourceUpdate = DateTime.Now;
     private GameState State = GameState.Instance;
 
     private void Start()
@@ -29,7 +30,11 @@ public class Tile : MonoBehaviour
     {
         if (EventSystem.current.IsPointerOverGameObject()) return;
 
-        if (Resource)
+        if (Building)
+        {
+            UI.Instance.ShowBuilding(this);
+        }
+        else if (Resource)
         {
             Building building = Resource.Building;
 
@@ -51,8 +56,22 @@ public class Tile : MonoBehaviour
     {
         Debug.Log("GetResources " + X + "," + Y + "\n" + JsonUtility.ToJson(res, true));
         NextResourceUpdate = DateTime.Now.AddSeconds(res.SecondsUntilNextUpdate);
+        LastResourceUpdate = DateTime.Now;
         Stash = res.Resources;
 
         StartCoroutine("ResourceUpdateTimer");
+    }
+
+    public TimeSpan GetTimeUntilNextUpdate()
+    {
+        return NextResourceUpdate.Subtract(DateTime.Now);
+    }
+
+    public float GetProgressUntilNextUpdate()
+    {
+        var total = (float)NextResourceUpdate.Subtract(LastResourceUpdate).TotalSeconds;
+        var done = (float)NextResourceUpdate.Subtract(DateTime.Now).TotalSeconds;
+        var progress = 1 - Mathf.Clamp01(done / total);
+        return progress;
     }
 }
