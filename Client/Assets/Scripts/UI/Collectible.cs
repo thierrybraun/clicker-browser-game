@@ -59,8 +59,16 @@ public class Collectible : MonoBehaviour
     private void OnCollected(API.CollectResourcesResponse res)
     {
         Debug.Log("Collect: \n" + JsonUtility.ToJson(res, true));
-        Tile.Stash = res.Resources;
-        GameState.Instance.MyPlayer = res.Player;
+        if (res.Success)
+        {
+            Tile.Stash = res.Resources;
+            GameState.Instance.MyPlayer = res.Player;
+            background.SetActive(false);
+        }
+        else
+        {
+            Debug.LogError(res.Error);
+        }
     }
 
 }
