@@ -1,5 +1,4 @@
-﻿using Model;
-using System;
+﻿using System;
 
 namespace API
 {
@@ -8,7 +7,7 @@ namespace API
         void GetCity(long cityId, Action<GetCityResponse> callback);
         void CreateBuilding(long cityId, int building, int x, int y, Action<CreateBuildingResponse> callback);
         void GetPlayer(long playerId, Action<GetPlayerResponse> callback);
-        void GetCityForPlayer(long playerId, Action<GetCityResponse> callback);        
+        void GetCityForPlayer(long playerId, Action<GetCityResponse> callback);
         void CollectResources(long currentCityId, int x, int y, Action<CollectResourcesResponse> callback);
         void GetStashForTile(long currentCityId, int x, int y, Action<GetStashForTileResponse> callback);
     }
@@ -32,7 +31,7 @@ namespace API
         public bool Success;
         public string Error;
         public Player Player;
-    }    
+    }
 
     public struct CollectResourcesResponse
     {

@@ -9,7 +9,7 @@ public class Tile : MonoBehaviour
     public FieldType Field;
     public Resource Resource;
     public Building Building;
-    public Model.ResourceStash Stash = new Model.ResourceStash();
+    public ResourceCollection Stash = new ResourceCollection();
 
     private GameController gameController;
     private DateTime NextResourceUpdate = DateTime.Now;
@@ -58,7 +58,7 @@ public class Tile : MonoBehaviour
         Debug.Log("GetResources " + X + "," + Y + "\n" + JsonUtility.ToJson(res, true));
         NextResourceUpdate = DateTime.Now.AddSeconds(res.SecondsUntilNextUpdate);
         LastResourceUpdate = DateTime.Now;
-        Stash = res.Resources;
+        Stash = res.Resources.ToResourceCollection();
 
         StartCoroutine("ResourceUpdateTimer");
     }

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using API;
 using System;
-using Model;
 
 public class GameState
 {

@@ -3,7 +3,7 @@
 [CreateAssetMenu(fileName = "Building", menuName = "Data/Building", order = 1)]
 public class Building : ScriptableObject
 {
-    public Model.BuildingType ApiType;
+    public API.BuildingType ApiType;
     public GameObject Prefab;
     public Sprite CollectionSprite;
     public CostFunction BuildCostFunction;

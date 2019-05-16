@@ -18,7 +18,7 @@ public class CityLoader : MonoBehaviour
         return terrain.GetComponentsInChildren<Tile>();
     }
 
-    public void LoadCity(Model.City map)
+    public void LoadCity(API.City map)
     {
         try
         {

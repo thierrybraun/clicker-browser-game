@@ -1,4 +1,4 @@
-﻿namespace Model
+﻿namespace API
 {
     [System.Serializable]
     public struct City
@@ -23,6 +23,16 @@
     {
         public int X, Y;
         public int Food, Wood, Metal;
+
+        public ResourceCollection ToResourceCollection()
+        {
+            return new ResourceCollection
+            {
+                Food = Food,
+                Wood = Wood,
+                Metal = Metal
+            };
+        }
     }
 
     public enum BuildingType
