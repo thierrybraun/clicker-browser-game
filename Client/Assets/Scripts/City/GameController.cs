@@ -8,8 +8,7 @@ using API;
 public class GameController : MonoBehaviour
 {
     public CityLoader CityLoader;
-    private GameState State = GameState.Instance;
-    public WorldUI WorldUI;
+    private GameState State = GameState.Instance;    
 
     private void Start()
     {

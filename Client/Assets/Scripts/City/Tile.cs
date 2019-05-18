@@ -18,7 +18,7 @@ public class Tile : MonoBehaviour
 
     private void Start()
     {
-        WorldUI.Instance.Register(this);
+        UI.UIController.Instance.Register(this);
         gameController = FindObjectOfType<GameController>();
         if (Building)
         {
@@ -30,10 +30,10 @@ public class Tile : MonoBehaviour
     {
         if (EventSystem.current.IsPointerOverGameObject()) return;
 
-        WorldUI.Instance.HideMenues();
+        UI.UIController.Instance.HideMenues();
         if (Building)
         {
-            UI.Instance.ShowBuilding(this);
+            UI.UIController.Instance.ShowBuilding(this);
         }
         else if (Resource)
         {
@@ -41,7 +41,7 @@ public class Tile : MonoBehaviour
 
             if (building)
             {
-                WorldUI.Instance.ShowBuildMenu(this);
+                UI.UIController.Instance.ShowBuildMenu(this);
             }
         }
     }
