@@ -58,5 +58,10 @@ namespace API
         {
             throw new NotImplementedException();
         }
+
+        public void UpgradeBuilding(long currentCityId, int x, int y, Action<UpgradeResponse> callback)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

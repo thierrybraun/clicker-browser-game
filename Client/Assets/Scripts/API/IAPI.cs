@@ -10,6 +10,7 @@ namespace API
         void GetCityForPlayer(long playerId, Action<GetCityResponse> callback);
         void CollectResources(long currentCityId, int x, int y, Action<CollectResourcesResponse> callback);
         void GetStashForTile(long currentCityId, int x, int y, Action<GetStashForTileResponse> callback);
+        void UpgradeBuilding(long currentCityId, int x, int y, Action<UpgradeResponse> callback);
     }
 
     public struct GetCityResponse
@@ -47,5 +48,12 @@ namespace API
         public string Error;
         public ResourceStash Resources;
         public int SecondsUntilNextUpdate;
+        public int SecondsFromLastUpdate;
+    }
+
+    public struct UpgradeResponse
+    {
+        public bool Success;
+        public string Error;
     }
 }

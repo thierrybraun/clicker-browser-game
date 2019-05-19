@@ -28,7 +28,7 @@ namespace API
 
             players = new Dictionary<long, Player>
         {
-            { 0, new Player { Id = 0, Name = "Player1", Wood = 10 } }
+            { 0, new Player { Id = 0, Name = "Player1", Wood = 100, Metal = 100 } }
         };
         }
 
@@ -95,6 +95,8 @@ namespace API
             {
                 var city = cities[cityId];
                 var buildingType = ((BuildingType[])Enum.GetValues(typeof(BuildingType)))[building];
+                var dbBuilding = buildings[cityId][y, x];
+
                 var cost = UnityEngine.Resources.Load<Building>("Building/" + buildingType.ToString()).BuildCostFunction.GetCost(1);
 
                 var player = players[cityId];
@@ -114,6 +116,7 @@ namespace API
                     players[cityId] = player;
 
                     city.fields[y * height + x].buildingType = buildingType;
+                    city.fields[y * height + x].BuildingLevel = 1;
                     buildings[cityId][y, x] = new DbBuilding
                     {
                         Stash = new ResourceStash(),
@@ -205,30 +208,33 @@ namespace API
         public void GetStashForTile(long cityId, int x, int y, Action<GetStashForTileResponse> callback)
         {
             var building = buildings[cityId][y, x];
-            var dateNow = DateTime.UtcNow;
+            var dateNow = DateTime.UtcNow;            
             var ticks = GetPassedTicks(building.LastQuery, dateNow);
             building.LastQuery = building.LastQuery.AddSeconds(tickDuration * ticks);
             int secondsUntilNextUpdate = (int)Math.Ceiling(building.LastQuery.Add(TimeSpan.FromSeconds(tickDuration)).Subtract(dateNow).TotalSeconds);
+            int secondsFromLastQuery = dateNow.Subtract(building.LastQuery).Seconds;
 
             var city = cities[cityId];
             var tile = city.fields.First(f => f.x == x && f.y == y);
 
+            var production = UnityEngine.Resources.Load<Building>("Building/" + tile.buildingType.ToString()).ProductionFunction.GetProduction(tile.BuildingLevel);
+
             switch (tile.buildingType)
             {
                 case BuildingType.Applefarm:
-                    building.Stash.Food += ticks;
+                    building.Stash.Food += ticks * production.Food;
                     break;
                 case BuildingType.Fishingboat:
-                    building.Stash.Food += ticks;
+                    building.Stash.Food += ticks * production.Food;
                     break;
                 case BuildingType.House:
                     //Food += GetPassedTicks(lastQuery, lastUpdateTime);
                     break;
                 case BuildingType.Lumberjack:
-                    building.Stash.Wood += ticks;
+                    building.Stash.Wood += ticks * production.Wood;
                     break;
                 case BuildingType.Mine:
-                    building.Stash.Metal += ticks;
+                    building.Stash.Metal += ticks * production.Metal;
                     break;
             }
 
@@ -238,8 +244,43 @@ namespace API
             {
                 Success = true,
                 SecondsUntilNextUpdate = secondsUntilNextUpdate,
+                SecondsFromLastUpdate = secondsFromLastQuery,
                 Resources = building.Stash
             });
+        }
+
+        public void UpgradeBuilding(long currentCityId, int x, int y, Action<UpgradeResponse> callback)
+        {
+            var building = buildings[currentCityId][y, x];
+            var player = players[currentCityId];
+            var buildingType = cities[currentCityId].fields.First(f => f.x == x && f.y == y).buildingType;
+            var field = cities[currentCityId].fields[y * height + x];
+
+            var cost = UnityEngine.Resources.Load<Building>("Building/" + buildingType.ToString()).BuildCostFunction.GetCost(field.BuildingLevel + 1);
+
+            if (player.Wood < cost.Wood || player.Metal < cost.Metal || player.Food < cost.Food)
+            {
+                callback(new UpgradeResponse
+                {
+                    Error = "Not enough resources",
+                    Success = false
+                });
+            }
+            else
+            {
+                player.Food -= cost.Food;
+                player.Wood -= cost.Wood;
+                player.Metal -= cost.Metal;
+                players[currentCityId] = player;
+
+                buildings[currentCityId][y, x] = building;
+                cities[currentCityId].fields[y * height + x].BuildingLevel = field.BuildingLevel + 1;
+
+                callback(new UpgradeResponse
+                {
+                    Success = true
+                });
+            }
         }
     }
 }

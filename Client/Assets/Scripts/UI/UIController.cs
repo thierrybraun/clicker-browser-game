@@ -44,7 +44,7 @@ namespace UI
             HideMenues();
             if (tile.Building)
             {
-                BuildingDetail.Tile = tile;
+                BuildingDetail.TileCoordinates = new Vector2Int(tile.X, tile.Y);
                 BuildingDetail.gameObject.SetActive(true);
             }
         }

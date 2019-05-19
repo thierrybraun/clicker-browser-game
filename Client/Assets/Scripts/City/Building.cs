@@ -7,4 +7,5 @@ public class Building : ScriptableObject
     public GameObject Prefab;
     public Sprite CollectionSprite;
     public CostFunction BuildCostFunction;
+    public ProductionFunction ProductionFunction;
 }

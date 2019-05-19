@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
 using System.Linq;
+using System.Collections.Generic;
 
 public class CityLoader : MonoBehaviour
 {
     public static int TILE_SIZE = 10;
     public GameObject Flat, Water, Hills;
     private GameObject terrain;
+
+    private IDictionary<Vector2Int, Tile> tiles;
 
     private void Start()
     {
@@ -29,21 +32,25 @@ public class CityLoader : MonoBehaviour
             terrain = new GameObject("Terrain");
             terrain.transform.SetParent(transform);
 
+            tiles = new Dictionary<Vector2Int, Tile>();
+
             var rand = new System.Random(0);
             for (int i = 0; i < map.height; i++)
             {
                 for (int j = 0; j < map.width; j++)
                 {
                     var field = map.fields.First(f => f.x == j && f.y == i);
-                    var tile = Instantiate<GameObject>(GetTile(field.fieldType));
+                    var tile = Instantiate<GameObject>(GetTilePrefab(field.fieldType));
                     tile.transform.SetParent(terrain.transform);
                     tile.transform.position = new Vector3(j * TILE_SIZE, 0, i * TILE_SIZE);
                     var comp = tile.AddComponent<Tile>();
                     comp.Field = field.fieldType;
                     comp.Resource = resources.FirstOrDefault(r => r.ApiType == field.resourceType);
                     comp.Building = buildings.FirstOrDefault(b => b.ApiType == field.buildingType);
+                    comp.BuildingLevel = field.BuildingLevel;
                     comp.X = j;
                     comp.Y = i;
+                    tiles[new Vector2Int(j, i)] = comp;
                     var collider = tile.AddComponent<BoxCollider>();
                     collider.size = new Vector3(TILE_SIZE, TILE_SIZE, TILE_SIZE);
                     collider.center = new Vector3(0, -TILE_SIZE / 2, 0);
@@ -75,7 +82,7 @@ public class CityLoader : MonoBehaviour
         }
     }
 
-    private GameObject GetTile(FieldType type)
+    private GameObject GetTilePrefab(FieldType type)
     {
         switch (type)
         {
@@ -87,6 +94,11 @@ public class CityLoader : MonoBehaviour
                 return Hills;
         }
         throw new System.Exception("No type defined: " + type);
+    }
+
+    public Tile GetTile(int x, int y)
+    {
+        return tiles[new Vector2Int(x, y)];
     }
 
 }

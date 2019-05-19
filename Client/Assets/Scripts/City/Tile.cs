@@ -9,11 +9,13 @@ public class Tile : MonoBehaviour
     public FieldType Field;
     public Resource Resource;
     public Building Building;
+    public int BuildingLevel;
     public ResourceCollection Stash = new ResourceCollection();
 
     private GameController gameController;
     private DateTime NextResourceUpdate = DateTime.Now;
     private DateTime LastResourceUpdate = DateTime.Now;
+    private DateTime LastStashChange = DateTime.Now;
     private GameState State = GameState.Instance;
 
     private void Start()
@@ -58,6 +60,7 @@ public class Tile : MonoBehaviour
         Debug.Log("GetResources " + X + "," + Y + "\n" + JsonUtility.ToJson(res, true));
         NextResourceUpdate = DateTime.Now.AddSeconds(res.SecondsUntilNextUpdate);
         LastResourceUpdate = DateTime.Now;
+        LastStashChange = DateTime.Now.Subtract(TimeSpan.FromSeconds(res.SecondsFromLastUpdate));
         Stash = res.Resources.ToResourceCollection();
 
         StartCoroutine("ResourceUpdateTimer");
@@ -70,7 +73,7 @@ public class Tile : MonoBehaviour
 
     public float GetProgressUntilNextUpdate()
     {
-        var total = (float)NextResourceUpdate.Subtract(LastResourceUpdate).TotalSeconds;
+        var total = (float)NextResourceUpdate.Subtract(LastStashChange).TotalSeconds;
         var done = (float)NextResourceUpdate.Subtract(DateTime.Now).TotalSeconds;
         var progress = 1 - Mathf.Clamp01(done / total);
         return progress;

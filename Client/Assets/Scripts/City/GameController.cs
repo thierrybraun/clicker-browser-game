@@ -8,7 +8,7 @@ using API;
 public class GameController : MonoBehaviour
 {
     public CityLoader CityLoader;
-    private GameState State = GameState.Instance;    
+    private GameState State = GameState.Instance;
 
     private void Start()
     {
@@ -19,6 +19,11 @@ public class GameController : MonoBehaviour
         }
 
         State.Api.GetPlayer(0, LoadPlayer);
+    }
+
+    public Tile GetTile(int x, int y)
+    {
+        return CityLoader.GetTile(x, y);
     }
 
     private void LoadPlayer(GetPlayerResponse resp)
@@ -56,5 +61,23 @@ public class GameController : MonoBehaviour
                 State.Api.GetCity(State.CurrentCityId.Value, LoadCity);
             }
         });
+    }
+
+    public void UpgradeBuilding(Tile tile)
+    {
+        GameState.Instance.Api.UpgradeBuilding(GameState.Instance.CurrentCityId.Value, tile.X, tile.Y, UpgradeHandler);
+    }
+
+    public void UpgradeHandler(API.UpgradeResponse response)
+    {
+        Debug.Log("UpgradeBuilding: " + JsonUtility.ToJson(response, true));
+        if (response.Success)
+        {
+            State.Api.GetCity(State.CurrentCityId.Value, LoadCity);
+        }
+        else
+        {
+            Debug.LogError(response.Error);
+        }
     }
 }
