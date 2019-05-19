@@ -47,7 +47,7 @@ namespace UI
 
                 CurrentLevel.text = "Level: " + tile.BuildingLevel;
 
-                var cost = tile.Building.BuildCostFunction.GetCost(tile.BuildingLevel);
+                var cost = tile.Building.BuildCostFunction.GetCost(tile.BuildingLevel + 1);
                 FoodCost.text = "Food: " + cost.Food;
                 WoodCost.text = "Wood: " + cost.Wood;
                 MetalCost.text = "Metal: " + cost.Metal;
