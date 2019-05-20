@@ -12,5 +12,10 @@ namespace UI
         [Header("Background Color")]
         public Color BackgroundLightColor;
         public Color BackgroundDarkColor;
-    }
+
+        [Header("Icons")]
+        public Sprite FoodSprite;
+        public Sprite WoodSprite;
+        public Sprite MetalSprite;        
+    }    
 }

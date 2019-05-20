@@ -1646,6 +1646,7 @@ GameObject:
   - component: {fileID: 760069219}
   - component: {fileID: 760069218}
   - component: {fileID: 760069220}
+  - component: {fileID: 760069221}
   m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
@@ -1729,6 +1730,20 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &760069221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 760069216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b38b626579af4b408469fae36317565, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skinData: {fileID: 11400000, guid: 7875f1f70172a7043b3649410030549a, type: 2}
+  Type: 1
 --- !u!1 &849909787
 GameObject:
   m_ObjectHideFlags: 0
@@ -1802,6 +1817,7 @@ GameObject:
   - component: {fileID: 854539570}
   - component: {fileID: 854539569}
   - component: {fileID: 854539571}
+  - component: {fileID: 854539572}
   m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
@@ -1885,6 +1901,20 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &854539572
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 854539567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b38b626579af4b408469fae36317565, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skinData: {fileID: 11400000, guid: 7875f1f70172a7043b3649410030549a, type: 2}
+  Type: 2
 --- !u!1 &863386387
 GameObject:
   m_ObjectHideFlags: 0
@@ -2715,6 +2745,7 @@ GameObject:
   - component: {fileID: 1234274797}
   - component: {fileID: 1234274796}
   - component: {fileID: 1234274798}
+  - component: {fileID: 1234274799}
   m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
@@ -2798,6 +2829,20 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &1234274799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1234274794}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b38b626579af4b408469fae36317565, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skinData: {fileID: 11400000, guid: 7875f1f70172a7043b3649410030549a, type: 2}
+  Type: 0
 --- !u!1 &1328955159
 GameObject:
   m_ObjectHideFlags: 0
