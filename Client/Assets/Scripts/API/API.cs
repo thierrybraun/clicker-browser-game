@@ -10,7 +10,7 @@ namespace API
         public static API Instance { get { return instance; } }
 
 
-        private void Awake()
+        protected virtual void Awake()
         {
             DontDestroyOnLoad(gameObject);
             if (instance != null && instance != this)

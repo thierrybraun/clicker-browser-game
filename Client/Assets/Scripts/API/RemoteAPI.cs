@@ -21,6 +21,18 @@ namespace API
             }
         };
 
+        protected override void Awake()
+        {
+            base.Awake();
+            var url = Application.absoluteURL;
+            if (url.Trim().Length > 0)
+            {
+                if (!url.EndsWith("/")) url = url + "/";
+                endpoint = url + "api/";
+            }
+            Debug.Log("API endpoint: " + endpoint);
+        }
+
         private IEnumerator GetRequest<T>(string uri, Action<T> callback)
         {
             string url = endpoint + uri;
