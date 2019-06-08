@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace API
 {
-    public class DummyAPI : IAPI
+    public class DummyAPI : API
     {
         private struct DbBuilding
         {
@@ -18,6 +19,8 @@ namespace API
         private IDictionary<long, Player> players;
         private IDictionary<long, DbBuilding[,]> buildings = new Dictionary<long, DbBuilding[,]>();
         private const int tickDuration = 10;
+
+        public override string Credentials { set { } }
 
         public DummyAPI()
         {
@@ -36,7 +39,7 @@ namespace API
         {
             buildings.Add(id, new DbBuilding[height, width]);
             Field[] fields = new Field[10 * 10];
-            var random = new Random((int)id);
+            var random = new System.Random((int)id);
             for (int i = 0; i < height; i++)
             {
                 for (int j = 0; j < width; j++)
@@ -89,7 +92,7 @@ namespace API
             return city;
         }
 
-        public void CreateBuilding(long cityId, int building, int x, int y, Action<CreateBuildingResponse> callback)
+        public override void CreateBuilding(long cityId, int building, int x, int y, Action<CreateBuildingResponse> callback)
         {
             try
             {
@@ -141,12 +144,12 @@ namespace API
             }
         }
 
-        public void GetCity(long cityId, Action<GetCityResponse> callback)
+        public override void GetCity(long cityId, Action<GetCityResponse> callback)
         {
             callback(new GetCityResponse { Success = true, City = cities[cityId] });
         }
 
-        public void GetPlayer(long playerId, Action<GetPlayerResponse> callback)
+        public override void GetPlayer(long playerId, Action<GetPlayerResponse> callback)
         {
             try
             {
@@ -168,7 +171,7 @@ namespace API
             }
         }
 
-        public void GetCityForPlayer(long playerId, Action<GetCityResponse> callback)
+        public override void GetCityForPlayer(long playerId, Action<GetCityResponse> callback)
         {
             callback(new GetCityResponse { Success = true, City = cities[playerId] });
         }
@@ -178,7 +181,7 @@ namespace API
             return now.Subtract(last).Seconds / tickDuration;
         }
 
-        public void CollectResources(long currentCityId, int x, int y, Action<CollectResourcesResponse> callback)
+        public override void CollectResources(long currentCityId, int x, int y, Action<CollectResourcesResponse> callback)
         {
             var field = cities[currentCityId].fields.Where(f => f.x == x && f.y == y);
 
@@ -205,10 +208,10 @@ namespace API
             });
         }
 
-        public void GetStashForTile(long cityId, int x, int y, Action<GetStashForTileResponse> callback)
+        public override void GetStashForTile(long cityId, int x, int y, Action<GetStashForTileResponse> callback)
         {
             var building = buildings[cityId][y, x];
-            var dateNow = DateTime.UtcNow;            
+            var dateNow = DateTime.UtcNow;
             var ticks = GetPassedTicks(building.LastQuery, dateNow);
             building.LastQuery = building.LastQuery.AddSeconds(tickDuration * ticks);
             int secondsUntilNextUpdate = (int)Math.Ceiling(building.LastQuery.Add(TimeSpan.FromSeconds(tickDuration)).Subtract(dateNow).TotalSeconds);
@@ -249,7 +252,7 @@ namespace API
             });
         }
 
-        public void UpgradeBuilding(long currentCityId, int x, int y, Action<UpgradeResponse> callback)
+        public override void UpgradeBuilding(long currentCityId, int x, int y, Action<UpgradeResponse> callback)
         {
             var building = buildings[currentCityId][y, x];
             var player = players[currentCityId];
@@ -281,6 +284,20 @@ namespace API
                     Success = true
                 });
             }
+        }
+
+        public override void Authenticate(string user, string pass, Action<AuthenticateResponse> callback)
+        {
+            callback(new AuthenticateResponse
+            {
+                Success = user == "Player1",
+                Error = user == "Player1" ? null : "Use 'Player1' as username"
+            });
+        }
+
+        public override void GetMe(Action<GetPlayerResponse> callback)
+        {
+            GetPlayer(0, callback);
         }
     }
 }

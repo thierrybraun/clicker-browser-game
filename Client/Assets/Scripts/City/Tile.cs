@@ -52,7 +52,7 @@ public class Tile : MonoBehaviour
     {
         var delay = Math.Max(0, (float)Math.Ceiling((NextResourceUpdate.Subtract(DateTime.Now)).TotalSeconds));
         yield return new WaitForSeconds(delay);
-        State.Api.GetStashForTile(State.CurrentCityId.Value, X, Y, OnGetStashForTile);
+        API.API.Instance.GetStashForTile(State.CurrentCityId.Value, X, Y, OnGetStashForTile);
     }
 
     private void OnGetStashForTile(API.GetStashForTileResponse res)

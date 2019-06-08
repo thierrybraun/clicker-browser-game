@@ -18,7 +18,7 @@ public class GameController : MonoBehaviour
             return;
         }
 
-        State.Api.GetPlayer(0, LoadPlayer);
+        API.API.Instance.GetMe(LoadPlayer);
     }
 
     public Tile GetTile(int x, int y)
@@ -32,7 +32,7 @@ public class GameController : MonoBehaviour
         if (resp.Success)
         {
             State.MyPlayer = resp.Player;
-            State.Api.GetCityForPlayer(State.MyPlayer.Id, LoadCity);
+            API.API.Instance.GetCityForPlayer(State.MyPlayer.Id, LoadCity);
         }
     }
 
@@ -52,20 +52,20 @@ public class GameController : MonoBehaviour
 
     public void Build(Building building, int x, int y)
     {
-        State.Api.CreateBuilding(State.CurrentCityId.Value, (int)building.ApiType, x, y, res =>
+        API.API.Instance.CreateBuilding(State.CurrentCityId.Value, (int)building.ApiType, x, y, res =>
         {
             Debug.Log("Build\n" + JsonUtility.ToJson(res, true));
             if (res.Success)
             {
                 State.MyPlayer = res.Player;
-                State.Api.GetCity(State.CurrentCityId.Value, LoadCity);
+                API.API.Instance.GetCity(State.CurrentCityId.Value, LoadCity);
             }
         });
     }
 
     public void UpgradeBuilding(Tile tile)
     {
-        GameState.Instance.Api.UpgradeBuilding(GameState.Instance.CurrentCityId.Value, tile.X, tile.Y, UpgradeHandler);
+        API.API.Instance.UpgradeBuilding(GameState.Instance.CurrentCityId.Value, tile.X, tile.Y, UpgradeHandler);
     }
 
     public void UpgradeHandler(API.UpgradeResponse response)
@@ -73,7 +73,7 @@ public class GameController : MonoBehaviour
         Debug.Log("UpgradeBuilding: " + JsonUtility.ToJson(response, true));
         if (response.Success)
         {
-            State.Api.GetCity(State.CurrentCityId.Value, LoadCity);
+            API.API.Instance.GetCity(State.CurrentCityId.Value, LoadCity);
         }
         else
         {

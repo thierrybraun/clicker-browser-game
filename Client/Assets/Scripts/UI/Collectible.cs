@@ -58,7 +58,7 @@ namespace UI
 
         public void Collect()
         {
-            GameState.Instance.Api.CollectResources(GameState.Instance.CurrentCityId.Value, Tile.X, Tile.Y, OnCollected);
+            API.API.Instance.CollectResources(GameState.Instance.CurrentCityId.Value, Tile.X, Tile.Y, OnCollected);
         }
 
         private void OnCollected(API.CollectResourcesResponse res)

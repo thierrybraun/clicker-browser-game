@@ -8,7 +8,6 @@ public class GameState
 
     public long? CurrentCityId;
     public Player MyPlayer;
-    public IAPI Api = new DummyAPI();
     public DateTime? LastResourceUpdate = null;
     public int? TickDuration;
 
