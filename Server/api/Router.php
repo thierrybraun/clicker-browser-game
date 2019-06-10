@@ -24,11 +24,16 @@ class Route
 class Router
 {
     private $routes = array();
+    private $db;
+
+    public function __construct(Database $db)
+    {
+        $this->db = $db;
+    }
 
     public function process()
     {
         $reqHeaders = apache_request_headers();
-        error_log(var_export($_SERVER['REQUEST_URI'], true));
         if (!isset($reqHeaders['Authorization']) || !$this->isAuthorized($reqHeaders['Authorization'])) {
             header('Content-type:application/json;charset=utf-8');
             echo json_encode(array(
@@ -61,8 +66,16 @@ class Router
         if (empty($auth)) return false;
         if (!substr($auth, 0, 4) === 'Basic') return false;
         $creds = explode(':', base64_decode(substr($auth, 6)));
-        if ($creds[0] === $creds[1]) {
+
+        $user = $this->db->findPlayerPassword($creds[0]);
+        if (is_null($user)) {
+            return false;
+        }
+
+        if (password_verify($creds[1], $user['password'])) {
             return true;
+        } else {
+            return false;
         }
     }
 
