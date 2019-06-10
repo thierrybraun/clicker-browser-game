@@ -26,6 +26,9 @@ EXPOSE 443
 ADD ./Client/build /var/www/site
 ADD ./Server/api /var/www/site/api
 
+VOLUME /var/www/site/dev
+VOLUME /var/www/site/dev/api
+
 # Update the default apache site with the config we created.
 ADD ./Server/apache-config-default.conf /etc/apache2/sites-enabled/000-default.conf
 ADD ./Server/apache-config-ssl.conf /etc/apache2/sites-enabled/000-ssl.conf
