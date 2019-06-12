@@ -32,7 +32,7 @@ public class GameController : MonoBehaviour
         if (resp.Success)
         {
             State.MyPlayer = resp.Player;
-            API.API.Instance.GetCityForPlayer(State.MyPlayer.Id, LoadCity);
+            API.API.Instance.GetCityForPlayer(State.MyPlayer.id, LoadCity);
         }
     }
 

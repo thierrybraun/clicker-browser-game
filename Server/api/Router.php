@@ -35,16 +35,6 @@ class Router
 
     public function process()
     {
-        $reqHeaders = apache_request_headers();
-        if (!isset($reqHeaders['Authorization']) || !$this->isAuthorized($reqHeaders['Authorization'])) {
-            header('Content-type:application/json;charset=utf-8');
-            echo json_encode(array(
-                'Success' => false,
-                'Error' => 'NotAuthorized'
-            ));
-            return;
-        }
-
         $path = splitPath($_SERVER['REQUEST_URI']);
         while ($path[0] !== 'api' && count($path) > 0) {
             array_shift($path);
@@ -53,6 +43,19 @@ class Router
         $method = $_SERVER['REQUEST_METHOD'];
         foreach ($this->routes as $route) {
             if ($this->pathFits($path, $route->path) && $route->method === $method) {
+
+                if ($route->requiresAuth) {
+                    $reqHeaders = apache_request_headers();
+                    if (!isset($reqHeaders['Authorization']) || !$this->isAuthorized($reqHeaders['Authorization'])) {
+                        header('Content-type:application/json;charset=utf-8');
+                        echo json_encode(array(
+                            'Success' => false,
+                            'Error' => 'NotAuthorized'
+                        ));
+                        return;
+                    }
+                }
+
                 header('Content-type:application/json;charset=utf-8');
                 $res = call_user_func($route->callback, ...$this->getPathVariables($path, $route->path));
                 echo json_encode($res);

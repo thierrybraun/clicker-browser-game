@@ -33,6 +33,6 @@ class PlayerManager
         $existing = $this->db->findPlayerByName($username);
         if ($existing) throw new Exception('Name already taken');
 
-        $this->db->createPlayer($username, password_hash($password, PASSWORD_DEFAULT));
+        $this->db->createPlayer($username, password_hash($password, PASSWORD_DEFAULT));        
     }
 }

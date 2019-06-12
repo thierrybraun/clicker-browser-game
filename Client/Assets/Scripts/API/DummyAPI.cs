@@ -31,7 +31,7 @@ namespace API
 
             players = new Dictionary<long, Player>
         {
-            { 0, new Player { Id = 0, Name = "Player1" } }
+            { 0, new Player { id = 0, name = "Player1" } }
         };
         }
 
