@@ -39,14 +39,16 @@ namespace UI
             if (Tile && Tile.Resource)
             {
                 var cost = Tile.Resource.Building.BuildCostFunction.GetCost(1);
+                var city = GameState.Instance.CurrentCity;
+                if (city == null) return;
                 var player = GameState.Instance.MyPlayer;
-                Confirm.enabled = player.Wood >= cost.Wood && player.Metal >= cost.Metal && player.Food >= cost.Food;
+                Confirm.enabled = city.Value.Wood >= cost.Wood && city.Value.Metal >= cost.Metal && city.Value.Food >= cost.Food;
 
                 var correctColor = new Color(0.1960784f, 0.1960784f, 0.1960784f);
                 var missingColor = new Color(1f, 0f, 1f);
-                Food.GetComponentInChildren<Text>().color = player.Food >= cost.Food ? correctColor : missingColor;
-                Wood.GetComponentInChildren<Text>().color = player.Wood >= cost.Wood ? correctColor : missingColor;
-                Metal.GetComponentInChildren<Text>().color = player.Metal >= cost.Metal ? correctColor : missingColor;
+                Food.GetComponentInChildren<Text>().color = city.Value.Food >= cost.Food ? correctColor : missingColor;
+                Wood.GetComponentInChildren<Text>().color = city.Value.Wood >= cost.Wood ? correctColor : missingColor;
+                Metal.GetComponentInChildren<Text>().color = city.Value.Metal >= cost.Metal ? correctColor : missingColor;
             }
 
             if (Input.GetMouseButton(1))

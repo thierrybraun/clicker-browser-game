@@ -6,10 +6,9 @@ public class GameState
 {
     private static GameState instance;
 
-    public long? CurrentCityId;
     public Player MyPlayer;
+    public City? CurrentCity;
     public DateTime? LastResourceUpdate = null;
-    public int? TickDuration;
 
     private GameState()
     {
@@ -28,9 +27,11 @@ public class GameState
         }
     }
 
+    public long? CurrentCityId { get => CurrentCity?.Id; }
+    public int? TickDuration { get => CurrentCity?.tickDuration; }
+
     public void LoadCity(City city)
     {
-        CurrentCityId = city.Id;
-        TickDuration = city.tickDuration;
+        CurrentCity = city;
     }
 }

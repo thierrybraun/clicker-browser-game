@@ -31,7 +31,7 @@ namespace API
 
             players = new Dictionary<long, Player>
         {
-            { 0, new Player { Id = 0, Name = "Player1", Wood = 100, Metal = 100 } }
+            { 0, new Player { Id = 0, Name = "Player1" } }
         };
         }
 
@@ -87,7 +87,9 @@ namespace API
                 width = width,
                 height = height,
                 fields = fields,
-                tickDuration = tickDuration
+                tickDuration = tickDuration,
+                Wood = 100,
+                Metal = 100
             };
             return city;
         }
@@ -103,7 +105,7 @@ namespace API
                 var cost = UnityEngine.Resources.Load<Building>("Building/" + buildingType.ToString()).BuildCostFunction.GetCost(1);
 
                 var player = players[cityId];
-                if (player.Wood < cost.Wood || player.Metal < cost.Metal || player.Food < cost.Food)
+                if (city.Wood < cost.Wood || city.Metal < cost.Metal || city.Food < cost.Food)
                 {
                     callback(new CreateBuildingResponse
                     {
@@ -113,9 +115,9 @@ namespace API
                 }
                 else
                 {
-                    player.Food -= cost.Food;
-                    player.Wood -= cost.Wood;
-                    player.Metal -= cost.Metal;
+                    city.Food -= cost.Food;
+                    city.Wood -= cost.Wood;
+                    city.Metal -= cost.Metal;
                     players[cityId] = player;
 
                     city.fields[y * height + x].buildingType = buildingType;
@@ -183,14 +185,15 @@ namespace API
 
         public override void CollectResources(long currentCityId, int x, int y, Action<CollectResourcesResponse> callback)
         {
+            var city = cities[currentCityId];
             var field = cities[currentCityId].fields.Where(f => f.x == x && f.y == y);
 
             var building = buildings[currentCityId][y, x];
 
             var player = players[currentCityId];
-            player.Food += building.Stash.Food;
-            player.Wood += building.Stash.Wood;
-            player.Metal += building.Stash.Metal;
+            city.Food += building.Stash.Food;
+            city.Wood += building.Stash.Wood;
+            city.Metal += building.Stash.Metal;
 
             building.Stash.Food = 0;
             building.Stash.Wood = 0;
@@ -254,6 +257,7 @@ namespace API
 
         public override void UpgradeBuilding(long currentCityId, int x, int y, Action<UpgradeResponse> callback)
         {
+            var city = cities[currentCityId];
             var building = buildings[currentCityId][y, x];
             var player = players[currentCityId];
             var buildingType = cities[currentCityId].fields.First(f => f.x == x && f.y == y).buildingType;
@@ -261,7 +265,7 @@ namespace API
 
             var cost = UnityEngine.Resources.Load<Building>("Building/" + buildingType.ToString()).BuildCostFunction.GetCost(field.BuildingLevel + 1);
 
-            if (player.Wood < cost.Wood || player.Metal < cost.Metal || player.Food < cost.Food)
+            if (city.Wood < cost.Wood || city.Metal < cost.Metal || city.Food < cost.Food)
             {
                 callback(new UpgradeResponse
                 {
@@ -271,9 +275,9 @@ namespace API
             }
             else
             {
-                player.Food -= cost.Food;
-                player.Wood -= cost.Wood;
-                player.Metal -= cost.Metal;
+                city.Food -= cost.Food;
+                city.Wood -= cost.Wood;
+                city.Metal -= cost.Metal;
                 players[currentCityId] = player;
 
                 buildings[currentCityId][y, x] = building;

@@ -7,7 +7,7 @@ namespace API
 {
     public class RemoteAPI : API
     {
-        private string endpoint = "https://localhost/api/";
+        private string endpoint = "https://localhost/dev/api/";
         private string credentials;
 
         public override string Credentials { set => credentials = value; }

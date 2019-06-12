@@ -55,8 +55,11 @@ namespace UI
                 var production = tile.Building.ProductionFunction.GetProduction(tile.BuildingLevel);
                 ResourceAmount.text = "+" + (production.Food + production.Metal + production.Wood);
 
-                var player = GameState.Instance.MyPlayer;
-                UpgradeButton.enabled = player.Wood >= cost.Wood && player.Metal >= cost.Metal && player.Food >= cost.Food;
+                var city = GameState.Instance.CurrentCity;
+                if (city.HasValue)
+                {
+                    UpgradeButton.enabled = city.Value.Wood >= cost.Wood && city.Value.Metal >= cost.Metal && city.Value.Food >= cost.Food;
+                }
             }
         }
 

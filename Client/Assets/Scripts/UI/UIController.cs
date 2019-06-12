@@ -31,11 +31,11 @@ namespace UI
         private void Update()
         {
             var State = GameState.Instance;
-            if (State.MyPlayer != null)
+            if (State.CurrentCity.HasValue)
             {
-                Food.text = State.MyPlayer.Food + "";
-                Wood.text = State.MyPlayer.Wood + "";
-                Metal.text = State.MyPlayer.Metal + "";
+                Food.text = State.CurrentCity.Value.Food + "";
+                Wood.text = State.CurrentCity.Value.Wood + "";
+                Metal.text = State.CurrentCity.Value.Metal + "";
             }
         }
 

@@ -7,6 +7,7 @@
         public int width, height;
         public Field[] fields;
         public int tickDuration;
+        public int Food, Wood, Metal;
     }
 
     [System.Serializable]
