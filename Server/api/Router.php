@@ -12,12 +12,14 @@ class Route
     public $method;
     public $path;
     public $callback;
+    public $requiresAuth;
 
-    public function __construct(string $method, string $path, callable $callback)
+    public function __construct(string $method, string $path, callable $callback, bool $requiresAuth = true)
     {
         $this->method = $method;
         $this->path = splitPath($path);
         $this->callback = $callback;
+        $this->requiresAuth = $requiresAuth;
     }
 }
 
@@ -116,9 +118,14 @@ class Router
         return $first === '{' && $last === '}';
     }
 
-    public function get(string $path, callable $callback)
+    public function get(string $path, callable $callback, bool $requiresAuth = true)
     {
-        $this->routes[] = new Route(Method::Get, $path, $callback);
+        $this->routes[] = new Route(Method::Get, $path, $callback, $requiresAuth);
+    }
+
+    public function post(string $path, callable $callback, bool $requiresAuth = true)
+    {
+        $this->routes[] = new Route(Method::Post, $path, $callback, $requiresAuth);
     }
 }
 

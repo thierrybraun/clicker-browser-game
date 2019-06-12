@@ -39,7 +39,8 @@ class Database
         return $user;
     }
 
-    public function findPlayerPassword($name) {
+    public function findPlayerPassword($name)
+    {
         $stmt = $this->pdo->prepare('SELECT password FROM player WHERE name=? LIMIT 1');
         $stmt->execute([$name]);
         $user = $stmt->fetch();
@@ -53,5 +54,11 @@ class Database
         $user = $stmt->fetch();
         if (!is_null($user)) unset($user['password']);
         return $user;
+    }
+
+    public function createPlayer(string $name, string $password)
+    {
+        $stmt = $this->pdo->prepare('INSERT INTO player VALUES (NULL, ?, ?)');
+        $stmt->execute([$name, $password]);
     }
 }

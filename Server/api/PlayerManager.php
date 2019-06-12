@@ -24,4 +24,15 @@ class PlayerManager
 
         return $this->db->findPlayerByName($creds[0]);
     }
+
+    public function createPlayer($username, $password)
+    {
+        if (trim($username) === '') throw new Exception('Name can\'t be blank');
+        if (trim($password) === '') throw new Exception('Password can\'t be blank');
+
+        $existing = $this->db->findPlayerByName($username);
+        if ($existing) throw new Exception('Name already taken');
+
+        $this->db->createPlayer($username, password_hash($password, PASSWORD_DEFAULT));
+    }
 }

@@ -9,6 +9,21 @@ $database = new Database();
 $router = new Router($database);
 $playerManager = new PlayerManager($database);
 
+$router->post('api/register', function () use ($playerManager) {
+    try {        
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+        $playerManager->createPlayer($username, $password);
+    } catch (\Throwable $th) {
+        return array(
+            'Success' => false,
+            'Error' => $th->getMessage()
+        );
+    }
+    return array(
+        'Success' => true,
+    );
+}, false);
 $router->get('api/login', function () {
     $res['Success'] = true;
     return $res;
