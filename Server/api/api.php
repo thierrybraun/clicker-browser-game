@@ -42,4 +42,3 @@ $router->get('api/health', function () use ($database) {
 });
 
 $router->process($database);
-$database->close();
