@@ -16,12 +16,12 @@ class CityManager
     {
         $city = $this->db->findCityByPlayerId($playerId);
         if (!$city) throw new Exception("No city found for player '$playerId'");
-        $fields = $this->db->findFieldsByCityId($city['id']);
+        $fields = $this->db->findFieldsByCityId($city->id);
 
         $size = sqrt(count($fields));
-        $city['height'] = $size;
-        $city['width'] = $size;
-        $city['fields'] = $fields;
+        $city->height = $size;
+        $city->width = $size;
+        $city->fields = $fields;
         return $city;
     }
 

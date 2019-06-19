@@ -1,5 +1,13 @@
 <?php
 
+class Player
+{
+    public $id;
+    public $name;
+    public function __set($name, $value)
+    { }
+}
+
 class City
 {
     public $id;
@@ -77,12 +85,11 @@ class Database
         return !is_null($this->pdo);
     }
 
-    public function findPlayerByName(string $name)
+    public function findPlayerByName(string $name): Player
     {
         $stmt = $this->pdo->prepare('SELECT * FROM player WHERE name=? LIMIT 1');
         $stmt->execute([$name]);
-        $user = $stmt->fetch();
-        if (!is_null($user)) unset($user['password']);
+        $user = $stmt->fetchObject('Player');
         return $user;
     }
 
@@ -94,12 +101,11 @@ class Database
         return $user;
     }
 
-    public function findPlayerById(int $id)
+    public function findPlayerById(int $id): Player
     {
         $stmt = $this->pdo->prepare('SELECT * FROM player WHERE id=? LIMIT 1');
         $stmt->execute([$id]);
-        $user = $stmt->fetch();
-        if (!is_null($user)) unset($user['password']);
+        $user = $stmt->fetchObject('Player');
         return $user;
     }
 
@@ -127,17 +133,17 @@ class Database
         return (int)$this->pdo->lastInsertId();
     }
 
-    public function findCityByPlayerId(int $playerId)
+    public function findCityByPlayerId(int $playerId): City
     {
         $stmt = $this->pdo->prepare('SELECT * FROM city WHERE idPlayer=?');
         $stmt->execute([$playerId]);
-        return $stmt->fetch();
+        return $stmt->fetchObject('City');
     }
 
-    public function findFieldsByCityId(int $cityId)
+    public function findFieldsByCityId(int $cityId): array
     {
         $stmt = $this->pdo->prepare('SELECT * FROM field WHERE idCity=? ORDER BY y, x');
         $stmt->execute([$cityId]);
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_CLASS, 'Field');
     }
 }
