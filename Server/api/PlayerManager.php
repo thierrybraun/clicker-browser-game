@@ -5,10 +5,12 @@ require_once 'Database.php';
 class PlayerManager
 {
     private $db;
+    private $cityManager;
 
-    public function __construct(Database $db)
+    public function __construct(Database $db, CityManager $cityManager)
     {
         $this->db = $db;
+        $this->cityManager = $cityManager;
     }
 
     public function getById(int $id)
@@ -33,6 +35,7 @@ class PlayerManager
         $existing = $this->db->findPlayerByName($username);
         if ($existing) throw new Exception('Name already taken');
 
-        $this->db->createPlayer($username, password_hash($password, PASSWORD_DEFAULT));        
+        $id = $this->db->createPlayer($username, password_hash($password, PASSWORD_DEFAULT));
+        $this->cityManager->createCity($id);
     }
 }

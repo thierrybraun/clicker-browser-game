@@ -1,5 +1,52 @@
 <?php
 
+class City
+{
+    public $id;
+    public $idPlayer;
+    public $tickDuration;
+    public $food;
+    public $wood;
+    public $metal;
+}
+
+abstract class FieldType
+{
+    const Plain = 0;
+    const Hills = 1;
+    const Water = 2;
+}
+abstract class BuildingType
+{
+    const None = 0;
+    const House = 1;
+    const Applefarm = 2;
+    const Fishingboat = 3;
+    const Lumberjack = 4;
+    const Mine = 5;
+}
+
+abstract class ResourceType
+{
+    const  None = 0;
+    const  Apples = 1;
+    const  Fish = 2;
+    const  Forest = 3;
+    const  Ore = 4;
+}
+
+class Field
+{
+    public $id;
+    public $idCity;
+    public $x;
+    public $y;
+    public $fieldType;
+    public $resourceType;
+    public $buildingType;
+    public $buildingLevel;
+}
+
 class Database
 {
     private $pdo = null;
@@ -58,14 +105,10 @@ class Database
 
     public function createPlayer(string $name, string $password): int
     {
-        $this->pdo->beginTransaction();
         $stmt = $this->pdo->prepare('INSERT INTO player(id, name, password) VALUES (NULL, ?, ?)');
         $stmt->execute([$name, $password]);
 
         $id = (int)$this->pdo->lastInsertId();
-        $this->createCity($id);
-
-        $this->pdo->commit();
         return $id;
     }
 
@@ -73,15 +116,7 @@ class Database
     {
         $stmt = $this->pdo->prepare('INSERT INTO city(id,  idPlayer, tickDuration, food, wood, metal) VALUES (NULL, ?, ?, 0, 0, 0)');
         $stmt->execute([$playerId, 10]);
-
         $cityId = (int)$this->pdo->lastInsertId();
-
-        for ($i = 0; $i < 10; $i++) {
-            for ($j = 0; $j < 10; $j++) {
-                $this->createField($cityId, $j, $i, 0, 0);
-            }
-        }
-
         return $cityId;
     }
 
