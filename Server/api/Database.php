@@ -90,6 +90,7 @@ class Database
         $stmt = $this->pdo->prepare('SELECT * FROM player WHERE name=? LIMIT 1');
         $stmt->execute([$name]);
         $user = $stmt->fetchObject('Player');
+        if ($user == false) throw new Exception("User '$name' not found");
         return $user;
     }
 
@@ -98,6 +99,7 @@ class Database
         $stmt = $this->pdo->prepare('SELECT password FROM player WHERE name=? LIMIT 1');
         $stmt->execute([$name]);
         $user = $stmt->fetch();
+        if ($user == false) throw new Exception("User '$name' not found");
         return $user;
     }
 
@@ -106,6 +108,7 @@ class Database
         $stmt = $this->pdo->prepare('SELECT * FROM player WHERE id=? LIMIT 1');
         $stmt->execute([$id]);
         $user = $stmt->fetchObject('Player');
+        if ($user == false) throw new Exception("User '$id' not found");
         return $user;
     }
 
@@ -137,7 +140,9 @@ class Database
     {
         $stmt = $this->pdo->prepare('SELECT * FROM city WHERE idPlayer=?');
         $stmt->execute([$playerId]);
-        return $stmt->fetchObject('City');
+        $city = $stmt->fetchObject('City');
+        if ($city == false) throw new Exception("City for user '$playerId' not found");
+        return $city;
     }
 
     public function findFieldsByCityId(int $cityId): array

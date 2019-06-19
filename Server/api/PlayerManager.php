@@ -13,9 +13,36 @@ class PlayerManager
         $this->cityManager = $cityManager;
     }
 
+    public function register()
+    {
+        try {
+            $username = $_POST['username'];
+            $password = $_POST['password'];
+            $this->createPlayer($username, $password);
+        } catch (\Throwable $th) {
+            return array(
+                'Success' => false,
+                'Error' => $th->getMessage()
+            );
+        }
+        return array(
+            'Success' => true,
+        );
+    }
+
     public function getById(int $id)
     {
-        return $this->db->findPlayerById($id);
+        try {
+            return array(
+                'Success' => true,
+                'Player' => $this->db->findPlayerById($id)
+            );
+        } catch (Exception $e) {
+            return array(
+                'Success' => false,
+                'Error' => $e->getMessage()
+            );
+        }
     }
 
     public function getMe()
@@ -24,7 +51,19 @@ class PlayerManager
         $creds = explode(':', base64_decode(substr($reqHeaders['Authorization'], 6)));
         $creds[0];
 
-        return $this->db->findPlayerByName($creds[0]);
+        $user = $this->db->findPlayerByName($creds[0]);
+
+        try {
+            return array(
+                'Success' => true,
+                'Player' => $this->db->findPlayerByName($creds[0])
+            );
+        } catch (Exception $e) {
+            return array(
+                'Success' => false,
+                'Error' => $e->getMessage()
+            );
+        }
     }
 
     public function createPlayer($username, $password)

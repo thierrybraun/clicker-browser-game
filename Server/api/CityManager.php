@@ -22,7 +22,11 @@ class CityManager
         $city->height = $size;
         $city->width = $size;
         $city->fields = $fields;
-        return $city;
+
+        return array(
+            'Success' => true,
+            'City' => $city
+        );
     }
 
     public function createCity($playerId)
