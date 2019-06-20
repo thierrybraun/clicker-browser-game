@@ -6,10 +6,12 @@ require_once 'Perlin.php';
 class CityManager
 {
     private $db;
+    private $tickDuration;
 
-    public function __construct(Database $db)
+    public function __construct(Database $db, int $tickDuration)
     {
         $this->db = $db;
+        $this->tickDuration = $tickDuration;
     }
 
     public function getCityByPlayerId($playerId)
@@ -43,6 +45,60 @@ class CityManager
             'Success' => true,
             'City' => $city
         );
+    }
+
+    public function getStash($cityId, $x, $y)
+    {
+        $now = time();
+        $field = $this->db->findField($cityId, $x, $y);
+        if ($field->lastQuery == 0) $field->lastQuery = $now;
+        $ticks = floor($this->getPassedTicks($field->lastQuery, $now));
+        $secondsUntilNextUpdate = (int)ceil(max($field->lastQuery + $this->tickDuration - $now, 0));
+        $secondsFromLastQuery = (int)min($now - $field->lastQuery, $this->tickDuration);
+
+        $field->lastQuery = $field->lastQuery + ($this->tickDuration * $ticks);
+        $level = $field->buildingLevel;
+        $production = array(
+            'food' => $level,
+            'wood' => $level,
+            'metal' => $level
+        );
+
+        switch ($field->buildingType) {
+            case BuildingType::Applefarm:
+                $field->food += $ticks * $production['food'];
+                break;
+            case BuildingType::Fishingboat:
+                $field->food += $ticks * $production['food'];
+                break;
+            case BuildingType::House:
+                //Food += GetPassedTicks(lastQuery, lastUpdateTime);
+                break;
+            case BuildingType::Lumberjack:
+                $field->wood += $ticks * $production['wood'];
+                break;
+            case BuildingType::Mine:
+                $field->metal += $ticks * $production['metal'];
+                break;
+        }
+
+        $this->db->saveField($field);
+
+        return array(
+            'Success' => true,
+            'Resources' => array(
+                'Food' => $field->food,
+                'Wood' => $field->wood,
+                'Metal' => $field->metal,
+            ),
+            'SecondsUntilNextUpdate' => $secondsUntilNextUpdate,
+            'SecondsFromLastUpdate' => $secondsFromLastQuery
+        );
+    }
+
+    private function getPassedTicks(int $last, int $now): int
+    {
+        return ($now - $last) / $this->tickDuration;
     }
 
     public function createBuilding($cityId)

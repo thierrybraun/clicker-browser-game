@@ -7,9 +7,11 @@ require_once 'PlayerManager.php';
 require_once 'CityManager.php';
 require_once 'Debug.php';
 
+$tickDuration = 10;
+
 $database = new Database();
 $router = new Router($database);
-$cityManager = new CityManager($database);
+$cityManager = new CityManager($database, $tickDuration);
 $playerManager = new PlayerManager($database, $cityManager);
 $debug = new Debug($cityManager);
 
@@ -22,6 +24,7 @@ $router->get('api/player/{id}', [$playerManager, 'getById']);
 $router->get('api/player/{id}/city', [$cityManager, 'getCityByPlayerId']);
 $router->post('api/city/{id}/building', [$cityManager, 'createBuilding']);
 $router->get('api/city/{id}', [$cityManager, 'getCityById']);
+$router->get('api/city/{id}/stash/{x}/{y}', [$cityManager, 'getStash']);
 
 $router->get('api/test', function () use ($debug) {
     header('Content-type:text/html;charset=utf-8');

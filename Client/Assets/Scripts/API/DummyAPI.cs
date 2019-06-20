@@ -121,7 +121,7 @@ namespace API
                     players[cityId] = player;
 
                     city.fields[y * height + x].buildingType = buildingType;
-                    city.fields[y * height + x].BuildingLevel = 1;
+                    city.fields[y * height + x].buildingLevel = 1;
                     buildings[cityId][y, x] = new DbBuilding
                     {
                         Stash = new ResourceStash(),
@@ -222,7 +222,7 @@ namespace API
             var city = cities[cityId];
             var tile = city.fields.First(f => f.x == x && f.y == y);
 
-            var production = UnityEngine.Resources.Load<Building>("Building/" + tile.buildingType.ToString()).ProductionFunction.GetProduction(tile.BuildingLevel);
+            var production = UnityEngine.Resources.Load<Building>("Building/" + tile.buildingType.ToString()).ProductionFunction.GetProduction(tile.buildingLevel);
 
             switch (tile.buildingType)
             {
@@ -262,7 +262,7 @@ namespace API
             var buildingType = cities[currentCityId].fields.First(f => f.x == x && f.y == y).buildingType;
             var field = cities[currentCityId].fields[y * height + x];
 
-            var cost = UnityEngine.Resources.Load<Building>("Building/" + buildingType.ToString()).BuildCostFunction.GetCost(field.BuildingLevel + 1);
+            var cost = UnityEngine.Resources.Load<Building>("Building/" + buildingType.ToString()).BuildCostFunction.GetCost(field.buildingLevel + 1);
 
             if (city.wood < cost.Wood || city.metal < cost.Metal || city.food < cost.Food)
             {
@@ -280,7 +280,7 @@ namespace API
                 players[currentCityId] = player;
 
                 buildings[currentCityId][y, x] = building;
-                cities[currentCityId].fields[y * height + x].BuildingLevel = field.BuildingLevel + 1;
+                cities[currentCityId].fields[y * height + x].buildingLevel = field.buildingLevel + 1;
 
                 callback(new UpgradeResponse
                 {

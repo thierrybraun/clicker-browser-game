@@ -17,7 +17,7 @@
         public FieldType fieldType;
         public ResourceType resourceType;
         public BuildingType buildingType;
-        public int BuildingLevel;
+        public int buildingLevel;
     }
 
     [System.Serializable]

@@ -107,7 +107,7 @@ namespace API
 
         public override void GetStashForTile(long currentCityId, int x, int y, Action<GetStashForTileResponse> callback)
         {
-            StartCoroutine(GetRequest<GetStashForTileResponse>("city/" + currentCityId + "/stash", callback));
+            StartCoroutine(GetRequest<GetStashForTileResponse>($"city/{currentCityId}/stash/{x}/{y}", callback));
         }
 
         public override void UpgradeBuilding(long currentCityId, int x, int y, Action<UpgradeResponse> callback)

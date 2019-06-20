@@ -47,7 +47,7 @@ public class CityLoader : MonoBehaviour
                     comp.Field = field.fieldType;
                     comp.Resource = resources.FirstOrDefault(r => r.ApiType == field.resourceType);
                     comp.Building = buildings.FirstOrDefault(b => b.ApiType == field.buildingType);
-                    comp.BuildingLevel = field.BuildingLevel;
+                    comp.BuildingLevel = field.buildingLevel;
                     comp.X = j;
                     comp.Y = i;
                     tiles[new Vector2Int(j, i)] = comp;

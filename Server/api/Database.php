@@ -12,7 +12,6 @@ class City
 {
     public $id;
     public $idPlayer;
-    public $tickDuration;
     public $food;
     public $wood;
     public $metal;
@@ -53,6 +52,10 @@ class Field
     public $resourceType;
     public $buildingType;
     public $buildingLevel;
+    public $food;
+    public $wood;
+    public $metal;
+    public $lastQuery;
 }
 
 class Database
@@ -123,8 +126,8 @@ class Database
 
     public function createCity(int $playerId): int
     {
-        $stmt = $this->pdo->prepare('INSERT INTO city(id,  idPlayer, tickDuration, food, wood, metal) VALUES (NULL, ?, ?, 0, 0, 0)');
-        $stmt->execute([$playerId, 10]);
+        $stmt = $this->pdo->prepare('INSERT INTO city(id, idPlayer, food, wood, metal) VALUES (NULL, ?, 0, 0, 0)');
+        $stmt->execute([$playerId]);
         $cityId = (int)$this->pdo->lastInsertId();
         return $cityId;
     }
@@ -172,7 +175,21 @@ class Database
 
     public function saveField(Field $field)
     {
-        $stmt = $this->pdo->prepare('UPDATE field SET id=?,idCity=?,x=?,y=?,fieldType=?,resourceType=?,buildingType=?,buildingLevel=? WHERE id=?');
-        $stmt->execute([$field->id, $field->idCity, $field->x, $field->y, $field->fieldType, $field->resourceType, $field->buildingType, $field->buildingLevel, $field->id]);
+        $stmt = $this->pdo->prepare('UPDATE field SET id=?,idCity=?,x=?,y=?,fieldType=?,resourceType=?,buildingType=?,buildingLevel=?,food=?,wood=?,metal=?,lastQuery=? WHERE id=?');
+        $stmt->execute([
+            $field->id,
+            $field->idCity,
+            $field->x,
+            $field->y,
+            $field->fieldType,
+            $field->resourceType,
+            $field->buildingType,
+            $field->buildingLevel,
+            $field->food,
+            $field->wood,
+            $field->metal,
+            $field->lastQuery,
+            $field->id
+        ]);
     }
 }
