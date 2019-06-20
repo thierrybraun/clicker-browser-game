@@ -33,9 +33,9 @@ namespace UI
             var State = GameState.Instance;
             if (State.CurrentCity.HasValue)
             {
-                Food.text = State.CurrentCity.Value.Food + "";
-                Wood.text = State.CurrentCity.Value.Wood + "";
-                Metal.text = State.CurrentCity.Value.Metal + "";
+                Food.text = State.CurrentCity.Value.food + "";
+                Wood.text = State.CurrentCity.Value.wood + "";
+                Metal.text = State.CurrentCity.Value.metal + "";
             }
         }
 

@@ -88,8 +88,8 @@ namespace API
                 height = height,
                 fields = fields,
                 tickDuration = tickDuration,
-                Wood = 100,
-                Metal = 100
+                wood = 100,
+                metal = 100
             };
             return city;
         }
@@ -105,7 +105,7 @@ namespace API
                 var cost = UnityEngine.Resources.Load<Building>("Building/" + buildingType.ToString()).BuildCostFunction.GetCost(1);
 
                 var player = players[cityId];
-                if (city.Wood < cost.Wood || city.Metal < cost.Metal || city.Food < cost.Food)
+                if (city.wood < cost.Wood || city.metal < cost.Metal || city.food < cost.Food)
                 {
                     callback(new CreateBuildingResponse
                     {
@@ -115,9 +115,9 @@ namespace API
                 }
                 else
                 {
-                    city.Food -= cost.Food;
-                    city.Wood -= cost.Wood;
-                    city.Metal -= cost.Metal;
+                    city.food -= cost.Food;
+                    city.wood -= cost.Wood;
+                    city.metal -= cost.Metal;
                     players[cityId] = player;
 
                     city.fields[y * height + x].buildingType = buildingType;
@@ -191,9 +191,9 @@ namespace API
             var building = buildings[currentCityId][y, x];
 
             var player = players[currentCityId];
-            city.Food += building.Stash.Food;
-            city.Wood += building.Stash.Wood;
-            city.Metal += building.Stash.Metal;
+            city.food += building.Stash.Food;
+            city.wood += building.Stash.Wood;
+            city.metal += building.Stash.Metal;
 
             building.Stash.Food = 0;
             building.Stash.Wood = 0;
@@ -265,7 +265,7 @@ namespace API
 
             var cost = UnityEngine.Resources.Load<Building>("Building/" + buildingType.ToString()).BuildCostFunction.GetCost(field.BuildingLevel + 1);
 
-            if (city.Wood < cost.Wood || city.Metal < cost.Metal || city.Food < cost.Food)
+            if (city.wood < cost.Wood || city.metal < cost.Metal || city.food < cost.Food)
             {
                 callback(new UpgradeResponse
                 {
@@ -275,9 +275,9 @@ namespace API
             }
             else
             {
-                city.Food -= cost.Food;
-                city.Wood -= cost.Wood;
-                city.Metal -= cost.Metal;
+                city.food -= cost.Food;
+                city.wood -= cost.Wood;
+                city.metal -= cost.Metal;
                 players[currentCityId] = player;
 
                 buildings[currentCityId][y, x] = building;

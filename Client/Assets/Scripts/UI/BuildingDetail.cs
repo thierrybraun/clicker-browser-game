@@ -58,7 +58,7 @@ namespace UI
                 var city = GameState.Instance.CurrentCity;
                 if (city.HasValue)
                 {
-                    UpgradeButton.enabled = city.Value.Wood >= cost.Wood && city.Value.Metal >= cost.Metal && city.Value.Food >= cost.Food;
+                    UpgradeButton.enabled = city.Value.wood >= cost.Wood && city.Value.metal >= cost.Metal && city.Value.food >= cost.Food;
                 }
             }
         }
