@@ -112,7 +112,10 @@ namespace API
 
         public override void UpgradeBuilding(long currentCityId, int x, int y, Action<UpgradeResponse> callback)
         {
-            throw new NotImplementedException();
+            WWWForm form = new WWWForm();
+            form.AddField("x", x);
+            form.AddField("y", y);
+            StartCoroutine(PostRequest<UpgradeResponse>("city/" + currentCityId + "/upgrade", form, callback));
         }
 
         public override void Authenticate(string user, string pass, Action<AuthenticateResponse> callback)

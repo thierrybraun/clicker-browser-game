@@ -77,6 +77,43 @@ class CityManager
         );
     }
 
+    public function upgrade($cityId)
+    {
+        $x = $_POST['x'];
+        $y = $_POST['y'];
+
+        $field = $this->db->findField($cityId, $x, $y);
+        $city = $this->db->findCityById($cityId);
+
+        $level = $field->buildingLevel + 1;
+        $cost = array(
+            'food' => 0 * $level,
+            'wood' => 3 * $level,
+            'metal' => 3 * $level
+        );
+        if ($field->buildingType == BuildingType::Mine) {
+            $cost = array(
+                'food' => 0 * $level,
+                'wood' => 3 * $level,
+                'metal' => 0 * $level
+            );
+        }
+
+        if ($city->food < $cost['food'] || $city->wood < $cost['wood'] || $city->metal < $cost['metal']) {
+            throw new Exception("Not enough resources");
+        }
+
+        $city->food -= $cost['food'];
+        $city->wood -= $cost['wood'];
+        $city->metal -= $cost['metal'];
+        $field->buildingLevel++;
+
+        $this->db->saveField($field);
+        $this->db->saveCity($city);
+
+        return array('Success' => true);
+    }
+
     public function getStash($cityId, $x, $y)
     {
         $now = time();
