@@ -28,6 +28,44 @@ class CityManager
             'City' => $city
         );
     }
+    public function getCityById($cityId)
+    {
+        $city = $this->db->findCityById($cityId);
+        if (!$city) throw new Exception("No city found: '$cityId'");
+        $fields = $this->db->findFieldsByCityId($city->id);
+
+        $size = sqrt(count($fields));
+        $city->height = $size;
+        $city->width = $size;
+        $city->fields = $fields;
+
+        return array(
+            'Success' => true,
+            'City' => $city
+        );
+    }
+
+    public function createBuilding($cityId)
+    {
+        $b = $_POST['building'];
+        $x = $_POST['x'];
+        $y = $_POST['y'];
+
+        if (!isset($b) || !isset($x) || !isset($y)) {
+            throw new Exception("Invalid data");
+        }
+
+        $field = $this->db->findField($cityId, $x, $y);
+        if ($field->buildingType == BuildingType::None) {
+            $field->buildingType = (int)$b;
+            $field->buildingType = $b;
+            $field->buildingLevel = 1;
+            $this->db->saveField($field);
+            return array('Success' => true);
+        } else {
+            throw new Exception("Building already exists");
+        }
+    }
 
     public function createCity($playerId)
     {

@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.Networking;
 using System;
+using System.Collections.Generic;
 
 namespace API
 {
@@ -53,6 +54,27 @@ namespace API
                 callback(res);
             }
         }
+        private IEnumerator PostRequest<T>(string uri, WWWForm data, Action<T> callback)
+        {
+            string url = endpoint + uri;
+            Debug.Log("Post " + url);
+
+            UnityWebRequest request = UnityWebRequest.Post(url, data);
+            request.certificateHandler = new SnakeOilCertificateHandler();
+            request.SetRequestHeader("Authorization", "Basic " + credentials);
+            yield return request.SendWebRequest();
+
+            if (request.isNetworkError || request.isHttpError)
+            {
+                Debug.Log(request.error);
+            }
+            else
+            {
+                Debug.Log(request.downloadHandler.text);
+                T res = JsonUtility.FromJson<T>(request.downloadHandler.text);
+                callback(res);
+            }
+        }
 
         public override void GetCity(long id, Action<GetCityResponse> callback)
         {
@@ -61,7 +83,11 @@ namespace API
 
         public override void CreateBuilding(long cityId, int building, int x, int y, Action<CreateBuildingResponse> callback)
         {
-            throw new NotImplementedException();
+            WWWForm form = new WWWForm();
+            form.AddField("building", building);
+            form.AddField("x", x);
+            form.AddField("y", y);
+            StartCoroutine(PostRequest<CreateBuildingResponse>("city/" + cityId + "/building", form, callback));
         }
 
         public override void GetPlayer(long playerId, Action<GetPlayerResponse> callback)

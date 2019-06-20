@@ -53,7 +53,6 @@ namespace API
     {
         public bool Success;
         public string Error;
-        public Player Player;
     }
 
     public struct GetPlayerResponse

@@ -145,10 +145,34 @@ class Database
         return $city;
     }
 
+    public function findCityById(int $cityId): City
+    {
+        $stmt = $this->pdo->prepare('SELECT * FROM city WHERE id=?');
+        $stmt->execute([$cityId]);
+        $city = $stmt->fetchObject('City');
+        if ($city == false) throw new Exception("City '$cityId' not found");
+        return $city;
+    }
+
     public function findFieldsByCityId(int $cityId): array
     {
         $stmt = $this->pdo->prepare('SELECT * FROM field WHERE idCity=? ORDER BY y, x');
         $stmt->execute([$cityId]);
         return $stmt->fetchAll(PDO::FETCH_CLASS, 'Field');
+    }
+
+    public function findField($cityId, $x, $y): Field
+    {
+        $stmt = $this->pdo->prepare('SELECT * FROM field WHERE idCity=? AND x=? AND y=? LIMIT 1');
+        $stmt->execute([$cityId, $x, $y]);
+        $field = $stmt->fetchObject('Field');
+        if ($field == false) throw new Exception("Field (city=$cityId,x=$x,y=$y) not found");
+        return $field;
+    }
+
+    public function saveField(Field $field)
+    {
+        $stmt = $this->pdo->prepare('UPDATE field SET id=?,idCity=?,x=?,y=?,fieldType=?,resourceType=?,buildingType=?,buildingLevel=? WHERE id=?');
+        $stmt->execute([$field->id, $field->idCity, $field->x, $field->y, $field->fieldType, $field->resourceType, $field->buildingType, $field->buildingLevel, $field->id]);
     }
 }

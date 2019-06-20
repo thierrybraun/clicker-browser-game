@@ -20,6 +20,8 @@ $router->post('api/register', [$playerManager, 'register'], false);
 $router->get('api/player/me', [$playerManager, 'getMe']);
 $router->get('api/player/{id}', [$playerManager, 'getById']);
 $router->get('api/player/{id}/city', [$cityManager, 'getCityByPlayerId']);
+$router->post('api/city/{id}/building', [$cityManager, 'createBuilding']);
+$router->get('api/city/{id}', [$cityManager, 'getCityById']);
 
 $router->get('api/test', function () use ($debug) {
     header('Content-type:text/html;charset=utf-8');

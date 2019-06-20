@@ -57,7 +57,6 @@ public class GameController : MonoBehaviour
             Debug.Log("Build\n" + JsonUtility.ToJson(res, true));
             if (res.Success)
             {
-                State.MyPlayer = res.Player;
                 API.API.Instance.GetCity(State.CurrentCityId.Value, LoadCity);
             }
         });

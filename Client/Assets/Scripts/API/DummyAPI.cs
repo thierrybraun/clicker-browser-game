@@ -83,7 +83,7 @@ namespace API
 
             var city = new City
             {
-                Id = id,
+                id = id,
                 width = width,
                 height = height,
                 fields = fields,
@@ -131,7 +131,6 @@ namespace API
 
                     callback(new CreateBuildingResponse
                     {
-                        Player = player,
                         Success = true
                     });
                 }

@@ -27,7 +27,7 @@ public class GameState
         }
     }
 
-    public long? CurrentCityId { get => CurrentCity?.Id; }
+    public long? CurrentCityId { get => CurrentCity?.id; }
     public int? TickDuration { get => CurrentCity?.tickDuration; }
 
     public void LoadCity(City city)
