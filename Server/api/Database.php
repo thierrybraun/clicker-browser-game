@@ -192,4 +192,17 @@ class Database
             $field->id
         ]);
     }
+
+    public function saveCity(City $city)
+    {
+        $stmt = $this->pdo->prepare('UPDATE city SET id=?,idPlayer=?,food=?,wood=?,metal=? WHERE id=?');
+        $stmt->execute([
+            $city->id,
+            $city->idPlayer,
+            $city->food,
+            $city->wood,
+            $city->metal,
+            $city->id
+        ]);
+    }
 }

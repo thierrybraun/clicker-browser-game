@@ -102,7 +102,7 @@ namespace API
 
         public override void CollectResources(long currentCityId, int x, int y, Action<CollectResourcesResponse> callback)
         {
-            throw new NotImplementedException();
+            StartCoroutine(PostRequest<CollectResourcesResponse>($"city/{currentCityId}/collect/{x}/{y}", new WWWForm(), callback));
         }
 
         public override void GetStashForTile(long currentCityId, int x, int y, Action<GetStashForTileResponse> callback)

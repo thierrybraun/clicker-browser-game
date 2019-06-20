@@ -47,6 +47,36 @@ class CityManager
         );
     }
 
+    public function collect($cityId, $x, $y)
+    {
+        $field = $this->db->findField($cityId, $x, $y);
+        $city = $this->db->findCityById($cityId);
+
+        $city->food += $field->food;
+        $city->wood += $field->wood;
+        $city->metal += $field->metal;
+        $field->food = 0;
+        $field->wood = 0;
+        $field->metal = 0;
+
+        $this->db->saveField($field);
+        $this->db->saveCity($city);
+
+        return array(
+            'Success' => true,
+            'CityResources' => array(
+                'Food' => $city->food,
+                'Wood' => $city->wood,
+                'Metal' => $city->metal,
+            ),
+            'Resources' => array(
+                'Food' => $field->food,
+                'Wood' => $field->wood,
+                'Metal' => $field->metal,
+            )
+        );
+    }
+
     public function getStash($cityId, $x, $y)
     {
         $now = time();

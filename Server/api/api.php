@@ -25,6 +25,7 @@ $router->get('api/player/{id}/city', [$cityManager, 'getCityByPlayerId']);
 $router->post('api/city/{id}/building', [$cityManager, 'createBuilding']);
 $router->get('api/city/{id}', [$cityManager, 'getCityById']);
 $router->get('api/city/{id}/stash/{x}/{y}', [$cityManager, 'getStash']);
+$router->post('api/city/{id}/collect/{x}/{y}', [$cityManager, 'collect']);
 
 $router->get('api/test', function () use ($debug) {
     header('Content-type:text/html;charset=utf-8');

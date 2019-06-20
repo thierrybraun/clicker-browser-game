@@ -205,8 +205,7 @@ namespace API
             callback(new CollectResourcesResponse
             {
                 Success = true,
-                Resources = building.Stash,
-                Player = player
+                Resources = building.Stash
             });
         }
 

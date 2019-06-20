@@ -67,7 +67,14 @@ namespace UI
             if (res.Success)
             {
                 Tile.Stash = res.Resources.ToResourceCollection();
-                GameState.Instance.MyPlayer = res.Player;
+                if (GameState.Instance.CurrentCity != null)
+                {
+                    var city = GameState.Instance.CurrentCity.Value;
+                    city.food = res.CityResources.Food;
+                    city.wood = res.CityResources.Wood;
+                    city.metal = res.CityResources.Metal;
+                    GameState.Instance.CurrentCity = city;
+                }
                 background.SetActive(false);
             }
             else

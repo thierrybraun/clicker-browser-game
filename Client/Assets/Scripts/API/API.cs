@@ -64,8 +64,8 @@ namespace API
 
     public struct CollectResourcesResponse
     {
+        public ResourceStash CityResources;
         public ResourceStash Resources;
-        public Player Player;
         public bool Success;
         public string Error;
     }
