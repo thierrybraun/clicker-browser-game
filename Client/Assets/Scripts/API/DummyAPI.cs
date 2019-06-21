@@ -301,5 +301,13 @@ namespace API
         {
             GetPlayer(0, callback);
         }
+
+        public override void GetVersion(Action<GetVersionResponse> callback)
+        {
+            callback(new GetVersionResponse
+            {
+                Version = "local"
+            });
+        }
     }
 }

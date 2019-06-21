@@ -127,5 +127,10 @@ namespace API
         {
             StartCoroutine(GetRequest<GetPlayerResponse>("player/me", callback));
         }
+
+        public override void GetVersion(Action<GetVersionResponse> callback)
+        {
+            StartCoroutine(GetRequest<GetVersionResponse>("version", callback));
+        }
     }
 }

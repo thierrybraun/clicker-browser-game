@@ -9,8 +9,10 @@ services:
     links:
       - db
     volumes:
-      - ./Client/build:/var/www/site/dev:ro
-      - ./Server/api:/var/www/site/dev/api:ro
+      - ./Client/build:/var/www/site/dev
+      - ./Server/api:/var/www/site/dev/api
+    environment:
+      - admin_credentials=admin:admin
 
   db:
     image: mysql

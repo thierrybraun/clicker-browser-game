@@ -34,6 +34,7 @@ namespace API
         public abstract void CollectResources(long currentCityId, int x, int y, Action<CollectResourcesResponse> callback);
         public abstract void GetStashForTile(long currentCityId, int x, int y, Action<GetStashForTileResponse> callback);
         public abstract void UpgradeBuilding(long currentCityId, int x, int y, Action<UpgradeResponse> callback);
+        public abstract void GetVersion(Action<GetVersionResponse> callback);
     }
 
     public struct AuthenticateResponse
@@ -83,5 +84,10 @@ namespace API
     {
         public bool Success;
         public string Error;
+    }
+
+    public struct GetVersionResponse
+    {
+        public string Version;
     }
 }

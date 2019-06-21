@@ -83,6 +83,48 @@ class Database
         }
     }
 
+    public function setup()
+    {
+        $this->pdo->query('CREATE TABLE IF NOT EXISTS `player` ( 
+            `id` INT NOT NULL AUTO_INCREMENT , 
+            `name` VARCHAR(255) NOT NULL , 
+            `password` VARCHAR(255) NOT NULL , 
+            PRIMARY KEY (`id`), UNIQUE (`name`)) 
+            ENGINE = InnoDB;');
+
+        $this->pdo->query('CREATE TABLE IF NOT EXISTS `city` ( 
+                `id` INT NOT NULL AUTO_INCREMENT , 
+                `idPlayer` INT NOT NULL , 
+                `food` INT DEFAULT 0, 
+                `wood` INT DEFAULT 0, 
+                `metal` INT DEFAULT 0 , 
+                PRIMARY KEY (`id`), 
+                INDEX idPlayerIndex (`idPlayer`),
+                FOREIGN KEY (idPlayer)
+                    REFERENCES player(id)
+                    ON DELETE RESTRICT
+            ) ENGINE = InnoDB;');
+
+        $this->pdo->query('CREATE TABLE IF NOT EXISTS `field` ( 
+                `id` INT NOT NULL AUTO_INCREMENT , 
+                `idCity` INT NOT NULL , 
+                `x` INT, 
+                `y` INT, 
+                `fieldType` INT DEFAULT 0, 
+                `resourceType` INT DEFAULT 0, 
+                `buildingType` INT DEFAULT 0,
+                `buildingLevel` INT DEFAULT 0,
+                `food` INT DEFAULT 0, 
+                `wood` INT DEFAULT 0, 
+                `metal` INT DEFAULT 0, 
+                PRIMARY KEY (`id`),
+                INDEX idCityIndex (`idCity`),
+                FOREIGN KEY (idCity)
+                    REFERENCES city(id)
+                    ON DELETE RESTRICT
+            ) ENGINE = InnoDB;');
+    }
+
     public function isConnected()
     {
         return !is_null($this->pdo);
@@ -118,7 +160,7 @@ class Database
     public function createPlayer(string $name, string $password): int
     {
         $stmt = $this->pdo->prepare('INSERT INTO player(id, name, password) VALUES (NULL, ?, ?)');
-        $stmt->execute([$name, $password]);
+        if (!$stmt->execute([$name, $password])) throw new Exception("Could not create player '$name'");
 
         $id = (int)$this->pdo->lastInsertId();
         return $id;
@@ -126,7 +168,7 @@ class Database
 
     public function createCity(int $playerId): int
     {
-        $stmt = $this->pdo->prepare('INSERT INTO city(id, idPlayer, food, wood, metal) VALUES (NULL, ?, 0, 0, 0)');
+        $stmt = $this->pdo->prepare('INSERT INTO city(id, idPlayer, food, wood, metal) VALUES (NULL, ?, 10, 10, 10)');
         $stmt->execute([$playerId]);
         $cityId = (int)$this->pdo->lastInsertId();
         return $cityId;

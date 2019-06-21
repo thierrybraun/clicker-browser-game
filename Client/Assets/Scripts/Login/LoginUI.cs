@@ -11,6 +11,8 @@ namespace Login
 {
     public class LoginUI : MonoBehaviour
     {
+        public string Version = "indev";
+        public Text ClientVersion, ApiVersion;
         public InputField Username, Password;
         public Text Error;
         public GameObject ApiContainer;
@@ -23,9 +25,10 @@ namespace Login
             Assert.IsNotNull(ApiContainer);
 
             Error.text = "";
-            ApiContainer.AddComponent<RemoteAPI>();
-            Username.text = "test0";
-            Password.text = "test0";
+            // ApiContainer.AddComponent<RemoteAPI>();
+            // Username.text = "test0";
+            // Password.text = "test0";
+            SetAPIType(0);
         }
 
         public void Login()
@@ -60,7 +63,8 @@ namespace Login
                 {
                     DestroyImmediate(api);
                     ApiContainer.AddComponent<RemoteAPI>();
-                    Username.text = "";
+                    Username.text = "test0";
+                    Password.text = "test0";
                 }
             }
             else
@@ -70,8 +74,11 @@ namespace Login
                     DestroyImmediate(api);
                     ApiContainer.AddComponent<DummyAPI>();
                     Username.text = "Player1";
+                    Password.text = "Player1";
                 }
             }
+            ClientVersion.text = $"Client version: {Version}";
+            ApiContainer.GetComponent<API.API>().GetVersion(res => ApiVersion.text = $"API version: {res.Version}");
         }
     }
 }
