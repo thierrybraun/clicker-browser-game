@@ -1,18 +1,30 @@
 <?php
+declare (strict_types = 1);
 
 require_once 'Database.php';
 
 class PlayerManager
 {
+    /** @var Database */
     private $db;
+    /** @var CityManager */
     private $cityManager;
 
+    /**
+     * @param Database $db
+     * @param CityManager $cityManager
+     */
     public function __construct(Database $db, CityManager $cityManager)
     {
         $this->db = $db;
         $this->cityManager = $cityManager;
     }
 
+    /**
+     * Register new user
+     *
+     * @return void
+     */
     public function register()
     {
         try {
@@ -30,6 +42,12 @@ class PlayerManager
         );
     }
 
+    /**
+     * Get player by id
+     *
+     * @param integer $id
+     * @return array
+     */
     public function getById(int $id)
     {
         try {
@@ -45,6 +63,11 @@ class PlayerManager
         }
     }
 
+    /**
+     * Get player data with credentials from request
+     *
+     * @return array
+     */
     public function getMe()
     {
         $reqHeaders = apache_request_headers();
@@ -66,7 +89,14 @@ class PlayerManager
         }
     }
 
-    public function createPlayer($username, $password)
+    /**
+     * Create a player
+     *
+     * @param string $username
+     * @param string $password
+     * @return void
+     */
+    public function createPlayer(string $username, string $password)
     {
         if (trim($username) === '') throw new Exception('Name can\'t be blank');
         if (trim($password) === '') throw new Exception('Password can\'t be blank');

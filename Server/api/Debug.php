@@ -1,13 +1,24 @@
 <?php
+declare (strict_types = 1);
+
 class Debug
 {
+    /** @var CityManager */
     private $cityManager;
 
+    /**
+     * @param CityManager $cityManager
+     */
     public function __construct(CityManager $cityManager)
     {
         $this->cityManager = $cityManager;
     }
 
+    /**
+     * Create HTML visualization of a random terrain
+     *
+     * @return string
+     */
     public function createTerrainVisualization(): string
     {
         $terrain = $this->cityManager->createTerrain(mt_rand());

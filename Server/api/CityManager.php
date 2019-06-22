@@ -1,20 +1,31 @@
 <?php
+declare (strict_types = 1);
 
 require_once 'Database.php';
 require_once 'Perlin.php';
 
 class CityManager
 {
+    /** @var Database */
     private $db;
+    /** @var integer */
     private $tickDuration;
 
+    /**
+     * @param Database $db
+     * @param integer $tickDuration
+     */
     public function __construct(Database $db, int $tickDuration)
     {
         $this->db = $db;
         $this->tickDuration = $tickDuration;
     }
 
-    public function getCityByPlayerId($playerId)
+    /**
+     * @param int $playerId
+     * @return array
+     */
+    public function getCityByPlayerId(int $playerId)
     {
         $city = $this->db->findCityByPlayerId($playerId);
         if (!$city) throw new Exception("No city found for player '$playerId'");
@@ -30,7 +41,12 @@ class CityManager
             'City' => $city
         );
     }
-    public function getCityById($cityId)
+
+    /**
+     * @param int $cityId
+     * @return array
+     */
+    public function getCityById(int $cityId)
     {
         $city = $this->db->findCityById($cityId);
         if (!$city) throw new Exception("No city found: '$cityId'");
@@ -47,7 +63,13 @@ class CityManager
         );
     }
 
-    public function collect($cityId, $x, $y)
+    /**
+     * @param integer $cityId
+     * @param integer $x
+     * @param integer $y
+     * @return array
+     */
+    public function collect(int $cityId, int $x, int $y)
     {
         $field = $this->db->findField($cityId, $x, $y);
         $city = $this->db->findCityById($cityId);
@@ -77,10 +99,14 @@ class CityManager
         );
     }
 
-    public function upgrade($cityId)
+    /**
+     * @param int $cityId
+     * @return array
+     */
+    public function upgrade(int $cityId)
     {
-        $x = $_POST['x'];
-        $y = $_POST['y'];
+        $x = (int)$_POST['x'];
+        $y = (int)$_POST['y'];
 
         $field = $this->db->findField($cityId, $x, $y);
         $city = $this->db->findCityById($cityId);
@@ -114,7 +140,13 @@ class CityManager
         return array('Success' => true);
     }
 
-    public function getStash($cityId, $x, $y)
+    /**
+     * @param integer $cityId
+     * @param integer $x
+     * @param integer $y
+     * @return array
+     */
+    public function getStash(int $cityId, int $x, int $y)
     {
         $now = time();
         $field = $this->db->findField($cityId, $x, $y);
@@ -163,16 +195,27 @@ class CityManager
         );
     }
 
+    /**
+     * Calculate passed ticks between two timestamps
+     *
+     * @param integer $last
+     * @param integer $now
+     * @return integer
+     */
     private function getPassedTicks(int $last, int $now): int
     {
-        return ($now - $last) / $this->tickDuration;
+        return (int)floor(($now - $last) / $this->tickDuration);
     }
 
-    public function createBuilding($cityId)
+    /**
+     * @param int $cityId
+     * @return array
+     */
+    public function createBuilding(int $cityId)
     {
         $b = $_POST['building'];
-        $x = $_POST['x'];
-        $y = $_POST['y'];
+        $x = (int)$_POST['x'];
+        $y = (int)$_POST['y'];
 
         if (!isset($b) || !isset($x) || !isset($y)) {
             throw new Exception("Invalid data");
@@ -190,7 +233,11 @@ class CityManager
         }
     }
 
-    public function createCity($playerId)
+    /**
+     * @param integer $playerId
+     * @return integer city id
+     */
+    public function createCity(int $playerId)
     {
         $cityId = (int)$this->db->createCity($playerId);
 
@@ -211,6 +258,12 @@ class CityManager
         return $cityId;
     }
 
+    /**
+     * Create a new random terrain
+     *
+     * @param integer $seed
+     * @return array
+     */
     public function createTerrain($seed)
     {
         $gen = new Perlin($seed);

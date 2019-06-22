@@ -1,8 +1,11 @@
 <?php
+declare (strict_types = 1);
 
 class Player
 {
+    /** @var integer */
     public $id;
+    /** @var string */
     public $name;
     public function __set($name, $value)
     { }
@@ -10,10 +13,15 @@ class Player
 
 class City
 {
+    /** @var integer */
     public $id;
+    /** @var integer */
     public $idPlayer;
+    /** @var integer */
     public $food;
+    /** @var integer */
     public $wood;
+    /** @var integer */
     public $metal;
 }
 
@@ -44,22 +52,35 @@ abstract class ResourceType
 
 class Field
 {
+    /** @var integer */
     public $id;
+    /** @var integer */
     public $idCity;
+    /** @var integer */
     public $x;
+    /** @var integer */
     public $y;
+    /** @var integer */
     public $fieldType;
+    /** @var integer */
     public $resourceType;
+    /** @var integer */
     public $buildingType;
+    /** @var integer */
     public $buildingLevel;
+    /** @var integer */
     public $food;
+    /** @var integer */
     public $wood;
+    /** @var integer */
     public $metal;
+    /** @var integer */
     public $lastQuery;
 }
 
 class Database
 {
+    /** @var PDO */
     private $pdo = null;
 
     public function __construct()
@@ -83,6 +104,11 @@ class Database
         }
     }
 
+    /**
+     * Create database tables if not existing
+     *
+     * @return void
+     */
     public function setup()
     {
         $this->pdo->query('CREATE TABLE IF NOT EXISTS `player` ( 
@@ -126,11 +152,18 @@ class Database
             ) ENGINE = InnoDB;');
     }
 
+    /**
+     * @return boolean
+     */
     public function isConnected()
     {
         return !is_null($this->pdo);
     }
 
+    /**
+     * @param string $name
+     * @return Player
+     */
     public function findPlayerByName(string $name): Player
     {
         $stmt = $this->pdo->prepare('SELECT * FROM player WHERE name=? LIMIT 1');
@@ -140,7 +173,11 @@ class Database
         return $user;
     }
 
-    public function findPlayerPassword($name)
+    /**
+     * @param string $name
+     * @return array
+     */
+    public function findPlayerPassword(string $name)
     {
         $stmt = $this->pdo->prepare('SELECT password FROM player WHERE name=? LIMIT 1');
         $stmt->execute([$name]);
@@ -149,6 +186,10 @@ class Database
         return $user;
     }
 
+    /**
+     * @param integer $id
+     * @return Player
+     */
     public function findPlayerById(int $id): Player
     {
         $stmt = $this->pdo->prepare('SELECT * FROM player WHERE id=? LIMIT 1');
@@ -158,6 +199,11 @@ class Database
         return $user;
     }
 
+    /**
+     * @param string $name
+     * @param string $password
+     * @return integer player id
+     */
     public function createPlayer(string $name, string $password): int
     {
         $stmt = $this->pdo->prepare('INSERT INTO player(id, name, password) VALUES (NULL, ?, ?)');
@@ -167,6 +213,10 @@ class Database
         return $id;
     }
 
+    /**
+     * @param integer $playerId
+     * @return integer city id
+     */
     public function createCity(int $playerId): int
     {
         $stmt = $this->pdo->prepare('INSERT INTO city(id, idPlayer, food, wood, metal) VALUES (NULL, ?, 10, 10, 10)');
@@ -175,6 +225,14 @@ class Database
         return $cityId;
     }
 
+    /**
+     * @param integer $cityId
+     * @param integer $x
+     * @param integer $y
+     * @param integer $type
+     * @param integer $resource
+     * @return integer field id
+     */
     public function createField(int $cityId, int $x, int $y, int $type, int $resource): int
     {
         $stmt = $this->pdo->prepare('INSERT INTO field(id, idCity, x, y, fieldType, resourceType, buildingType, buildingLevel) VALUES (NULL, ?, ?, ?, ?, ?, 0, 0)');
@@ -182,6 +240,10 @@ class Database
         return (int)$this->pdo->lastInsertId();
     }
 
+    /**
+     * @param integer $playerId
+     * @return City
+     */
     public function findCityByPlayerId(int $playerId): City
     {
         $stmt = $this->pdo->prepare('SELECT * FROM city WHERE idPlayer=?');
@@ -191,6 +253,10 @@ class Database
         return $city;
     }
 
+    /**
+     * @param integer $cityId
+     * @return City
+     */
     public function findCityById(int $cityId): City
     {
         $stmt = $this->pdo->prepare('SELECT * FROM city WHERE id=?');
@@ -200,6 +266,10 @@ class Database
         return $city;
     }
 
+    /**
+     * @param integer $cityId
+     * @return Field[]
+     */
     public function findFieldsByCityId(int $cityId): array
     {
         $stmt = $this->pdo->prepare('SELECT * FROM field WHERE idCity=? ORDER BY y, x');
@@ -207,7 +277,13 @@ class Database
         return $stmt->fetchAll(PDO::FETCH_CLASS, 'Field');
     }
 
-    public function findField($cityId, $x, $y): Field
+    /**
+     * @param int $cityId
+     * @param int $x
+     * @param int $y
+     * @return Field
+     */
+    public function findField(int $cityId, int $x, int $y): Field
     {
         $stmt = $this->pdo->prepare('SELECT * FROM field WHERE idCity=? AND x=? AND y=? LIMIT 1');
         $stmt->execute([$cityId, $x, $y]);
@@ -216,6 +292,10 @@ class Database
         return $field;
     }
 
+    /**
+     * @param Field $field
+     * @return void
+     */
     public function saveField(Field $field)
     {
         $stmt = $this->pdo->prepare('UPDATE field SET id=?,idCity=?,x=?,y=?,fieldType=?,resourceType=?,buildingType=?,buildingLevel=?,food=?,wood=?,metal=?,lastQuery=? WHERE id=?');
@@ -236,6 +316,10 @@ class Database
         ]);
     }
 
+    /**
+     * @param City $city
+     * @return void
+     */
     public function saveCity(City $city)
     {
         $stmt = $this->pdo->prepare('UPDATE city SET id=?,idPlayer=?,food=?,wood=?,metal=? WHERE id=?');

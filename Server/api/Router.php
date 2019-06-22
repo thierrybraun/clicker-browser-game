@@ -1,6 +1,9 @@
 <?php
 declare (strict_types = 1);
 
+/**
+ * HTTP verb to use
+ */
 abstract class Method
 {
     const Get = 'GET';
@@ -9,11 +12,21 @@ abstract class Method
 
 class Route
 {
+    /** @var string */
     public $method;
+    /** @var string[] */
     public $path;
+    /** @var callable */
     public $callback;
+    /** @var bool */
     public $requiresAuth;
 
+    /**          
+     * @param string $method
+     * @param string $path
+     * @param callable $callback
+     * @param boolean $requiresAuth
+     */
     public function __construct(string $method, string $path, callable $callback, bool $requiresAuth = true)
     {
         $this->method = $method;
@@ -25,9 +38,13 @@ class Route
 
 class Router
 {
+    /** @var Route[] */
     private $routes = array();
+
+    /** @var Database */
     private $db;
 
+    /** @param Database $db */
     public function __construct(Database $db)
     {
         $this->db = $db;
@@ -66,6 +83,12 @@ class Router
         header("HTTP/1.0 404 Not Found");
     }
 
+    /**
+     * Checks in database if player credentials match
+     *
+     * @param string $auth Credentials, username:password
+     * @return boolean
+     */
     private function isAuthorized($auth)
     {
         if (empty($auth)) return false;
@@ -84,6 +107,13 @@ class Router
         }
     }
 
+    /**
+     * Checks if path fits a route
+     *
+     * @param string[] $reqPath
+     * @param string[] $routePath
+     * @return boolean
+     */
     private function pathFits(array $reqPath, array $routePath)
     {
         if (count($reqPath) !== count($routePath)) return false;
@@ -102,6 +132,13 @@ class Router
         return true;
     }
 
+    /**
+     * Get an array with variable values from path, ordered by occurance in route
+     *
+     * @param string[] $reqPath
+     * @param string[] $routePath
+     * @return string[]
+     */
     private function getPathVariables(array $reqPath, array $routePath)
     {
         $res = array();
@@ -114,6 +151,12 @@ class Router
         return $res;
     }
 
+    /**
+     * Checks if a part of a path is a variable
+     *
+     * @param string $part
+     * @return boolean
+     */
     private function isPathVariable(string $part)
     {
         $first = substr($part, 0, 1);
@@ -121,17 +164,39 @@ class Router
         return $first === '{' && $last === '}';
     }
 
+    /**
+     * Adds a path with GET verb
+     *
+     * @param string $path
+     * @param callable $callback
+     * @param boolean $requiresAuth
+     * @return void
+     */
     public function get(string $path, callable $callback, bool $requiresAuth = true)
     {
         $this->routes[] = new Route(Method::Get, $path, $callback, $requiresAuth);
     }
 
+    /**
+     * Adds a path with POST verb
+     *
+     * @param string $path
+     * @param callable $callback
+     * @param boolean $requiresAuth
+     * @return void
+     */
     public function post(string $path, callable $callback, bool $requiresAuth = true)
     {
         $this->routes[] = new Route(Method::Post, $path, $callback, $requiresAuth);
     }
 }
 
+/**
+ * Split and clean a path into parts
+ *
+ * @param string $path
+ * @return string[]
+ */
 function splitPath(string $path)
 {
     return array_values(array_filter(explode('/', $path), function ($e) {
