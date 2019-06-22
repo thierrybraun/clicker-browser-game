@@ -32,17 +32,17 @@ namespace UI
 
             if (Stash.Food > 0)
             {
-                text.text = "+" + Stash.Food;
+                text.text = "+" + LargeNumberFormat.FormatNoDecimal(Stash.Food);
                 background.SetActive(true);
             }
             else if (Stash.Wood > 0)
             {
-                text.text = "+" + Stash.Wood;
+                text.text = "+" + LargeNumberFormat.FormatNoDecimal(Stash.Wood);
                 background.SetActive(true);
             }
             else if (Stash.Metal > 0)
             {
-                text.text = "+" + Stash.Metal;
+                text.text = "+" + LargeNumberFormat.FormatNoDecimal(Stash.Metal);
                 background.SetActive(true);
             }
         }
