@@ -62,9 +62,9 @@ public class GameController : MonoBehaviour
         });
     }
 
-    public void UpgradeBuilding(Tile tile)
+    public void UpgradeBuilding(Tile tile, int targetLevel)
     {
-        API.API.Instance.UpgradeBuilding(GameState.Instance.CurrentCityId.Value, tile.X, tile.Y, UpgradeHandler);
+        API.API.Instance.UpgradeBuilding(GameState.Instance.CurrentCityId.Value, tile.X, tile.Y, targetLevel, UpgradeHandler);
     }
 
     public void UpgradeHandler(API.UpgradeResponse response)

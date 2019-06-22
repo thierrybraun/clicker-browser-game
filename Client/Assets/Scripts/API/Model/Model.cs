@@ -8,6 +8,23 @@
         public Field[] fields;
         public int tickDuration;
         public int food, wood, metal;
+
+        public Currency Currency
+        {
+            get =>
+                 new Currency
+                 {
+                     Food = food,
+                     Wood = wood,
+                     Metal = metal
+                 };
+            set
+            {
+                food = value.Food;
+                wood = value.Wood;
+                metal = value.Metal;
+            }
+        }
     }
 
     [System.Serializable]

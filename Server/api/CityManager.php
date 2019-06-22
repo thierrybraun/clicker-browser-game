@@ -99,6 +99,21 @@ class CityManager
         );
     }
 
+    public function getCostRange(array $baseCost, int $currentLevel, int $targetLevel)
+    {
+        $currencyTypes = array('food', 'wood', 'metal');
+        $current = array();
+        foreach ($currencyTypes as $c) {
+            $current[$c] = 0;
+        }
+        for ($i = $currentLevel + 1; $i <= $targetLevel; $i++) {
+            foreach ($currencyTypes as $c) {
+                $current[$c] += $baseCost[$c] * $i;
+            }
+        }
+        return $current;
+    }
+
     /**
      * @param int $cityId
      * @return array
@@ -107,32 +122,37 @@ class CityManager
     {
         $x = (int)$_POST['x'];
         $y = (int)$_POST['y'];
+        $targetLevel = (int)$_POST['targetLevel'];
 
         $field = $this->db->findField($cityId, $x, $y);
         $city = $this->db->findCityById($cityId);
 
-        $level = $field->buildingLevel + 1;
-        $cost = array(
-            'food' => 0 * $level,
-            'wood' => 3 * $level,
-            'metal' => 3 * $level
+        $baseCost = array(
+            'food' => 0,
+            'wood' => 3,
+            'metal' => 3
         );
         if ($field->buildingType == BuildingType::Mine) {
-            $cost = array(
-                'food' => 0 * $level,
-                'wood' => 3 * $level,
-                'metal' => 0 * $level
+            $baseCost = array(
+                'food' => 0,
+                'wood' => 3,
+                'metal' => 0
             );
         }
 
+        $cost = $this->getCostRange($baseCost, $field->buildingLevel, $targetLevel);
         if ($city->food < $cost['food'] || $city->wood < $cost['wood'] || $city->metal < $cost['metal']) {
+            var_dump($cost);
+            var_dump($city->food);
+            var_dump($city->wood);
+            var_dump($city->metal);
             throw new Exception("Not enough resources");
         }
 
         $city->food -= $cost['food'];
         $city->wood -= $cost['wood'];
         $city->metal -= $cost['metal'];
-        $field->buildingLevel++;
+        $field->buildingLevel = $targetLevel;
 
         $this->db->saveField($field);
         $this->db->saveCity($city);

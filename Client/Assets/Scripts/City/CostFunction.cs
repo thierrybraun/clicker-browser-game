@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public abstract class CostFunction : ScriptableObject
 {
@@ -17,15 +18,16 @@ public abstract class CostFunction : ScriptableObject
         return current;
     }
 
-    public int GetMaxLevel(int currentLevel, int availableFood, int availableWood, int availableMetal)
+    public int GetMaxLevel(int currentLevel, Currency available)
     {
+        if (available == new Currency()) throw new Exception("Currency is 0");
         int targetLevel = currentLevel;
         var cost = GetCost(targetLevel + 1);
 
-        while (cost.Food <= availableFood && cost.Wood <= availableWood && cost.Metal <= availableMetal)
+        while (cost <= available)
         {
-            cost += GetCost(targetLevel);
             targetLevel++;
+            cost += GetCost(targetLevel + 1);
         }
 
         return targetLevel;

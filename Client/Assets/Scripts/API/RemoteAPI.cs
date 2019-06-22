@@ -110,11 +110,12 @@ namespace API
             StartCoroutine(GetRequest<GetStashForTileResponse>($"city/{currentCityId}/stash/{x}/{y}", callback));
         }
 
-        public override void UpgradeBuilding(long currentCityId, int x, int y, Action<UpgradeResponse> callback)
+        public override void UpgradeBuilding(long currentCityId, int x, int y, int targetLevel, Action<UpgradeResponse> callback)
         {
             WWWForm form = new WWWForm();
             form.AddField("x", x);
             form.AddField("y", y);
+            form.AddField("targetLevel", targetLevel);
             StartCoroutine(PostRequest<UpgradeResponse>("city/" + currentCityId + "/upgrade", form, callback));
         }
 

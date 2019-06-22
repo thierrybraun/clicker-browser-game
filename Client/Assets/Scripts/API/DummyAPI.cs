@@ -205,7 +205,8 @@ namespace API
             callback(new CollectResourcesResponse
             {
                 Success = true,
-                Resources = building.Stash
+                Resources = building.Stash,
+                CityResources = city.Currency
             });
         }
 
@@ -253,7 +254,7 @@ namespace API
             });
         }
 
-        public override void UpgradeBuilding(long currentCityId, int x, int y, Action<UpgradeResponse> callback)
+        public override void UpgradeBuilding(long currentCityId, int x, int y, int targetLevel, Action<UpgradeResponse> callback)
         {
             var city = cities[currentCityId];
             var building = buildings[currentCityId][y, x];
@@ -261,9 +262,9 @@ namespace API
             var buildingType = cities[currentCityId].fields.First(f => f.x == x && f.y == y).buildingType;
             var field = cities[currentCityId].fields[y * height + x];
 
-            var cost = UnityEngine.Resources.Load<Building>("Building/" + buildingType.ToString()).BuildCostFunction.GetCost(field.buildingLevel + 1);
+            var cost = UnityEngine.Resources.Load<Building>("Building/" + buildingType.ToString()).BuildCostFunction.GetCostRange(field.buildingLevel, targetLevel);
 
-            if (city.wood < cost.Wood || city.metal < cost.Metal || city.food < cost.Food)
+            if (city.Currency < cost)
             {
                 callback(new UpgradeResponse
                 {
@@ -273,13 +274,12 @@ namespace API
             }
             else
             {
-                city.food -= cost.Food;
-                city.wood -= cost.Wood;
-                city.metal -= cost.Metal;
+                city.Currency -= cost;
                 players[currentCityId] = player;
 
                 buildings[currentCityId][y, x] = building;
-                cities[currentCityId].fields[y * height + x].buildingLevel = field.buildingLevel + 1;
+                city.fields[y * height + x].buildingLevel = targetLevel;
+                cities[currentCityId] = city;
 
                 callback(new UpgradeResponse
                 {

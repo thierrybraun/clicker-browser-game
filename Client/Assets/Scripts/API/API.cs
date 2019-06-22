@@ -33,7 +33,7 @@ namespace API
         public abstract void GetCityForPlayer(long playerId, Action<GetCityResponse> callback);
         public abstract void CollectResources(long currentCityId, int x, int y, Action<CollectResourcesResponse> callback);
         public abstract void GetStashForTile(long currentCityId, int x, int y, Action<GetStashForTileResponse> callback);
-        public abstract void UpgradeBuilding(long currentCityId, int x, int y, Action<UpgradeResponse> callback);
+        public abstract void UpgradeBuilding(long currentCityId, int x, int y, int targetLevel, Action<UpgradeResponse> callback);
         public abstract void GetVersion(Action<GetVersionResponse> callback);
     }
 
@@ -65,7 +65,7 @@ namespace API
 
     public struct CollectResourcesResponse
     {
-        public ResourceStash CityResources;
+        public Currency CityResources;
         public ResourceStash Resources;
         public bool Success;
         public string Error;

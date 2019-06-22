@@ -17,5 +17,11 @@ namespace UI
         public Sprite FoodSprite;
         public Sprite WoodSprite;
         public Sprite MetalSprite;        
+
+        [Header("Button")]
+        public Color ButtonBackgroundLightColor;
+        public Color ButtonBackgroundDarkColor;
+        public Color ToggleButtonSelectedLightColor;
+        public Color ToggleButtonSelectedDarkColor;
     }    
 }

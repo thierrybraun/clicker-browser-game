@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2c3843d9283a4347b2a099a773e6a16, type: 3}
   m_Name: DefaultLinearCost
   m_EditorClassIdentifier: 
-  FoodBase: 0
-  WoodBase: 3
-  MetalBase: 3
+  Base:
+    Food: 0
+    Wood: 3
+    Metal: 3
