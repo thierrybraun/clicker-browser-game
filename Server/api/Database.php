@@ -117,6 +117,7 @@ class Database
                 `food` INT DEFAULT 0, 
                 `wood` INT DEFAULT 0, 
                 `metal` INT DEFAULT 0, 
+                `lastQuery` INT DEFAULT 0,
                 PRIMARY KEY (`id`),
                 INDEX idCityIndex (`idCity`),
                 FOREIGN KEY (idCity)
