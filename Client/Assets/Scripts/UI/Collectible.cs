@@ -58,6 +58,12 @@ namespace UI
 
         public void Collect()
         {
+            var city = GameState.Instance.CurrentCity.Value;
+            city.Currency += new Currency { Food = Tile.Stash.Food, Wood = Tile.Stash.Wood, Metal = Tile.Stash.Metal };
+            Tile.Stash.Food = 0;
+            Tile.Stash.Wood = 0;
+            Tile.Stash.Metal = 0;
+
             API.API.Instance.CollectResources(GameState.Instance.CurrentCityId.Value, Tile.X, Tile.Y, OnCollected);
         }
 

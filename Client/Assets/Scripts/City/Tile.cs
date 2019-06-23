@@ -8,23 +8,35 @@ public class Tile : MonoBehaviour
     public int X, Y;
     public FieldType Field;
     public Resource Resource;
-    public Building Building;
     public int BuildingLevel;
     public ResourceCollection Stash = new ResourceCollection();
 
+    private Building building;
     private GameController gameController;
     private DateTime NextResourceUpdate = DateTime.Now;
     private DateTime LastResourceUpdate = DateTime.Now;
     private DateTime LastStashChange = DateTime.Now;
     private GameState State = GameState.Instance;
+    private Coroutine resourceUpdateTimer;
+
+    public Building Building
+    {
+        get => building;
+        set
+        {
+            building = value;
+            UI.UIController.Instance.Register(this);
+            if (resourceUpdateTimer == null) resourceUpdateTimer = StartCoroutine("ResourceUpdateTimer");
+        }
+    }
 
     private void Start()
     {
-        UI.UIController.Instance.Register(this);
         gameController = FindObjectOfType<GameController>();
         if (Building)
         {
-            StartCoroutine("ResourceUpdateTimer");
+            UI.UIController.Instance.Register(this);
+            resourceUpdateTimer = StartCoroutine("ResourceUpdateTimer");
         }
     }
 
@@ -63,7 +75,7 @@ public class Tile : MonoBehaviour
         LastStashChange = DateTime.Now.Subtract(TimeSpan.FromSeconds(res.SecondsFromLastUpdate));
         Stash = res.Resources.ToResourceCollection();
 
-        StartCoroutine("ResourceUpdateTimer");
+        resourceUpdateTimer = StartCoroutine("ResourceUpdateTimer");
     }
 
     public TimeSpan GetTimeUntilNextUpdate()

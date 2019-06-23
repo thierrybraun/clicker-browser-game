@@ -14,6 +14,7 @@ public class CityLoader : MonoBehaviour
     {
         terrain = new GameObject("Terrain");
         terrain.transform.SetParent(transform);
+        tiles = new Dictionary<Vector2Int, Tile>();
     }
 
     public Tile[] GetTiles()
@@ -28,49 +29,46 @@ public class CityLoader : MonoBehaviour
             var buildings = Resources.LoadAll<Building>("Building");
             var resources = Resources.LoadAll<Resource>("Resource");
 
-            Destroy(terrain);
-            terrain = new GameObject("Terrain");
-            terrain.transform.SetParent(transform);
-
-            tiles = new Dictionary<Vector2Int, Tile>();
-
             var rand = new System.Random(0);
             for (int i = 0; i < map.height; i++)
             {
                 for (int j = 0; j < map.width; j++)
                 {
                     var field = map.fields.First(f => f.x == j && f.y == i);
-                    var tile = Instantiate<GameObject>(GetTilePrefab(field.fieldType));
-                    tile.transform.SetParent(terrain.transform);
-                    tile.transform.position = new Vector3(j * TILE_SIZE, 0, i * TILE_SIZE);
-                    var comp = tile.AddComponent<Tile>();
-                    comp.Field = field.fieldType;
-                    comp.Resource = resources.FirstOrDefault(r => r.ApiType == field.resourceType);
-                    comp.Building = buildings.FirstOrDefault(b => b.ApiType == field.buildingType);
-                    comp.BuildingLevel = field.buildingLevel;
-                    comp.X = j;
-                    comp.Y = i;
-                    tiles[new Vector2Int(j, i)] = comp;
-                    var collider = tile.AddComponent<BoxCollider>();
-                    collider.size = new Vector3(TILE_SIZE, TILE_SIZE, TILE_SIZE);
-                    collider.center = new Vector3(0, -TILE_SIZE / 2, 0);
-                    var rot = rand.Next(4);
-                    tile.transform.GetChild(0).Rotate(new Vector3(0, rot * 90, 0), Space.World);
-                    tile.name = "Tile_" + j + "_" + i;
-
-                    var building = comp.Building;
-                    if (building)
+                    var tile = GetTile(j, i);
+                    if (tile == null)
                     {
-                        var model = Instantiate(building.Prefab);
-                        model.transform.SetParent(tile.transform, false);
-                    }
-                    else
-                    {
-                        var resource = comp.Resource;
-                        if (resource)
+                        tile = InstantiateTile(j, i, field.fieldType);
+                        tiles[new Vector2Int(j, i)] = tile;
+                        tile.Field = field.fieldType;
+                        tile.X = j;
+                        tile.Y = i;
+                        tile.name = "Tile_" + j + "_" + i;
+                        tile.Resource = resources.FirstOrDefault(r => r.ApiType == field.resourceType);
+                        if (tile.Resource)
                         {
-                            var resourceModel = Instantiate<GameObject>(resource.Prefab);
-                            resourceModel.transform.SetParent(tile.transform, false);
+                            var resourceModel = Instantiate<GameObject>(tile.Resource.Prefab, tile.transform, false);
+                            resourceModel.name = "Resource";
+                        }
+
+                    }
+                    tile.BuildingLevel = field.buildingLevel;
+
+                    var rot = rand.Next(4);
+                    tile.transform.GetChild(0).rotation = Quaternion.Euler(-90, rot * 90, 0);
+
+                    if (field.buildingType != API.BuildingType.None)
+                    {
+                        if (!tile.Building || tile.Building.ApiType != field.buildingType)
+                        {
+                            tile.Building = buildings.FirstOrDefault(b => b.ApiType == field.buildingType);
+                            var model = Instantiate(tile.Building.Prefab, tile.transform, false);
+
+                            var resource = tile.transform.Find("Resource");
+                            if (resource)
+                            {
+                                Destroy(resource.gameObject);
+                            }
                         }
                     }
                 }
@@ -80,6 +78,17 @@ public class CityLoader : MonoBehaviour
         {
             Debug.LogError(e.Message + "\n" + e.StackTrace);
         }
+    }
+
+    private Tile InstantiateTile(int x, int y, FieldType type)
+    {
+        var tileGo = Instantiate<GameObject>(GetTilePrefab(type));
+        tileGo.transform.SetParent(terrain.transform);
+        tileGo.transform.position = new Vector3(x * TILE_SIZE, 0, y * TILE_SIZE);
+        var collider = tileGo.AddComponent<BoxCollider>();
+        collider.size = new Vector3(TILE_SIZE, TILE_SIZE, TILE_SIZE);
+        collider.center = new Vector3(0, -TILE_SIZE / 2, 0);
+        return tileGo.AddComponent<Tile>();
     }
 
     private GameObject GetTilePrefab(FieldType type)
@@ -98,7 +107,9 @@ public class CityLoader : MonoBehaviour
 
     public Tile GetTile(int x, int y)
     {
-        return tiles[new Vector2Int(x, y)];
+        Tile tile = null;
+        tiles.TryGetValue(new Vector2Int(x, y), out tile);
+        return tile;
     }
 
 }

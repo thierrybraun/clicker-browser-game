@@ -123,7 +123,13 @@ namespace UI
         public void Upgrade()
         {
             if (!TileCoordinates.HasValue) return;
-            var tile = GameController.GetTile(TileCoordinates.Value.x, TileCoordinates.Value.y);
+            var tile = GameController.GetTile(TileCoordinates.Value.x, TileCoordinates.Value.y);            
+
+            var state = GameState.Instance;
+            var city = state.CurrentCity.Value;
+            city.Currency -= upgradeCost;
+            tile.BuildingLevel = targetLevel;
+
             FindObjectOfType<GameController>().UpgradeBuilding(tile, targetLevel);
         }
     }

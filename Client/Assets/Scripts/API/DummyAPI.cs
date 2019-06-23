@@ -122,6 +122,7 @@ namespace API
 
                     city.fields[y * height + x].buildingType = buildingType;
                     city.fields[y * height + x].buildingLevel = 1;
+                    cities[cityId] = city;
                     buildings[cityId][y, x] = new DbBuilding
                     {
                         Stash = new ResourceStash(),
@@ -201,6 +202,7 @@ namespace API
             building.Stash.Y = y;
 
             buildings[currentCityId][y, x] = building;
+            cities[currentCityId] = city;
 
             callback(new CollectResourcesResponse
             {
