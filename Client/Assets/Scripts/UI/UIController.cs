@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -36,6 +37,17 @@ namespace UI
                 Food.text = LargeNumberFormat.FormatTwoDecimal(State.CurrentCity.Value.food);
                 Wood.text = LargeNumberFormat.FormatTwoDecimal(State.CurrentCity.Value.wood);
                 Metal.text = LargeNumberFormat.FormatTwoDecimal(State.CurrentCity.Value.metal);
+            }
+
+            var distances = new List<Tuple<Transform, float>>();
+            foreach (Transform t in CollectibleContainer)
+            {
+                distances.Add(Tuple.Create(t, Vector3.Distance(Camera.main.transform.position, t.position)));
+            }
+            distances.Sort((a, b) => b.Item2.CompareTo(a.Item2));
+            for (int i = 0; i < distances.Count; i++)
+            {
+                distances[i].Item1.SetSiblingIndex(i);
             }
         }
 
