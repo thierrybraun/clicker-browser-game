@@ -2,12 +2,7 @@
 
 public abstract class ProductionFunction : ScriptableObject
 {
-    public int FoodBase, WoodBase, MetalBase;
+    public Currency Base;
 
-    public abstract Production GetProduction(int level);
-
-    public struct Production
-    {
-        public int Food, Wood, Metal;
-    }
+    public abstract Currency GetProduction(int level);
 }

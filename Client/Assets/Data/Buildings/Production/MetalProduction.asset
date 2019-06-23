@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d67e76ddc2a465141b7b7d1b9f1bf594, type: 3}
   m_Name: MetalProduction
   m_EditorClassIdentifier: 
-  FoodBase: 0
-  WoodBase: 0
-  MetalBase: 1
+  Base:
+    Food: 0
+    Wood: 0
+    Metal: 1

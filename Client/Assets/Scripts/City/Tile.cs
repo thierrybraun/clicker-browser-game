@@ -9,7 +9,7 @@ public class Tile : MonoBehaviour
     public FieldType Field;
     public Resource Resource;
     public int BuildingLevel;
-    public ResourceCollection Stash = new ResourceCollection();
+    public Currency Stash = new Currency();
 
     private Building building;
     private GameController gameController;
@@ -69,11 +69,11 @@ public class Tile : MonoBehaviour
 
     private void OnGetStashForTile(API.GetStashForTileResponse res)
     {
-        Debug.Log("GetResources " + X + "," + Y + "\n" + JsonUtility.ToJson(res, true));
+        // Debug.Log("GetResources " + X + "," + Y + "\n" + JsonUtility.ToJson(res, true));
         NextResourceUpdate = DateTime.Now.AddSeconds(res.SecondsUntilNextUpdate);
         LastResourceUpdate = DateTime.Now;
         LastStashChange = DateTime.Now.Subtract(TimeSpan.FromSeconds(res.SecondsFromLastUpdate));
-        Stash = res.Resources.ToResourceCollection();
+        Stash = res.Resources;
 
         resourceUpdateTimer = StartCoroutine("ResourceUpdateTimer");
     }

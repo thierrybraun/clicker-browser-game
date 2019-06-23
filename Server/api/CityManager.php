@@ -21,6 +21,12 @@ class CityManager
         $this->tickDuration = $tickDuration;
     }
 
+    private function prepareCitySerialization(City $city): City
+    {
+        $city->currency = array('Food' => $city->food, 'Wood' => $city->wood, 'Metal' => $city->metal);
+        return $city;
+    }
+
     /**
      * @param int $playerId
      * @return array
@@ -38,7 +44,7 @@ class CityManager
 
         return array(
             'Success' => true,
-            'City' => $city
+            'City' => $this->prepareCitySerialization($city)
         );
     }
 
@@ -59,7 +65,7 @@ class CityManager
 
         return array(
             'Success' => true,
-            'City' => $city
+            'City' => $this->prepareCitySerialization($city)
         );
     }
 

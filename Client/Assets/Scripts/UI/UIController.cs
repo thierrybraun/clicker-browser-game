@@ -34,9 +34,9 @@ namespace UI
             var State = GameState.Instance;
             if (State.CurrentCity.HasValue)
             {
-                Food.text = LargeNumberFormat.FormatTwoDecimal(State.CurrentCity.Value.food);
-                Wood.text = LargeNumberFormat.FormatTwoDecimal(State.CurrentCity.Value.wood);
-                Metal.text = LargeNumberFormat.FormatTwoDecimal(State.CurrentCity.Value.metal);
+                Food.text = LargeNumberFormat.FormatTwoDecimal(State.CurrentCity.Value.currency.Food);
+                Wood.text = LargeNumberFormat.FormatTwoDecimal(State.CurrentCity.Value.currency.Wood);
+                Metal.text = LargeNumberFormat.FormatTwoDecimal(State.CurrentCity.Value.currency.Metal);
             }
 
             var distances = new List<Tuple<Transform, float>>();

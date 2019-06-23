@@ -66,7 +66,7 @@ namespace API
     public struct CollectResourcesResponse
     {
         public Currency CityResources;
-        public ResourceStash Resources;
+        public Currency Resources;
         public bool Success;
         public string Error;
     }
@@ -75,7 +75,7 @@ namespace API
     {
         public bool Success;
         public string Error;
-        public ResourceStash Resources;
+        public Currency Resources;
         public int SecondsUntilNextUpdate;
         public int SecondsFromLastUpdate;
     }

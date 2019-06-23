@@ -59,7 +59,7 @@ namespace UI
         public void Collect()
         {
             var city = GameState.Instance.CurrentCity.Value;
-            city.Currency += new Currency { Food = Tile.Stash.Food, Wood = Tile.Stash.Wood, Metal = Tile.Stash.Metal };
+            city.currency += new Currency { Food = Tile.Stash.Food, Wood = Tile.Stash.Wood, Metal = Tile.Stash.Metal };
             Tile.Stash.Food = 0;
             Tile.Stash.Wood = 0;
             Tile.Stash.Metal = 0;
@@ -72,13 +72,11 @@ namespace UI
             Debug.Log("Collect: \n" + JsonUtility.ToJson(res, true));
             if (res.Success)
             {
-                Tile.Stash = res.Resources.ToResourceCollection();
+                Tile.Stash = res.Resources;
                 if (GameState.Instance.CurrentCity != null)
                 {
                     var city = GameState.Instance.CurrentCity.Value;
-                    city.food = res.CityResources.Food;
-                    city.wood = res.CityResources.Wood;
-                    city.metal = res.CityResources.Metal;
+                    city.currency = res.CityResources;
                     GameState.Instance.CurrentCity = city;
                 }
                 background.SetActive(false);

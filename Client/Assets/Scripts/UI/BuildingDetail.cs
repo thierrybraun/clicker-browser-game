@@ -56,7 +56,7 @@ namespace UI
             var tile = GetCurrentTile();
             if (tile == null) return;
             var current = tile.BuildingLevel;
-            var max = tile.Building.BuildCostFunction.GetMaxLevel(current, GameState.Instance.CurrentCity?.Currency ?? new Currency());
+            var max = tile.Building.BuildCostFunction.GetMaxLevel(current, GameState.Instance.CurrentCity?.currency ?? new Currency());
             if (max < current) return;
             switch (selected)
             {
@@ -105,7 +105,7 @@ namespace UI
                 var city = GameState.Instance.CurrentCity;
                 if (city.HasValue)
                 {
-                    UpgradeButton.interactable = city?.Currency >= upgradeCost && targetLevel > tile.BuildingLevel;
+                    UpgradeButton.interactable = city?.currency >= upgradeCost && targetLevel > tile.BuildingLevel;
                 }
             }
         }
@@ -127,7 +127,7 @@ namespace UI
 
             var state = GameState.Instance;
             var city = state.CurrentCity.Value;
-            city.Currency -= upgradeCost;
+            city.currency -= upgradeCost;
             tile.BuildingLevel = targetLevel;
 
             FindObjectOfType<GameController>().UpgradeBuilding(tile, targetLevel);

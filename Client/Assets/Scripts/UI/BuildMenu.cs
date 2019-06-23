@@ -42,13 +42,13 @@ namespace UI
                 var city = GameState.Instance.CurrentCity;
                 if (city == null) return;
                 var player = GameState.Instance.MyPlayer;
-                Confirm.enabled = city.Value.wood >= cost.Wood && city.Value.metal >= cost.Metal && city.Value.food >= cost.Food;
+                Confirm.enabled = city.Value.currency >= cost;
 
                 var correctColor = new Color(0.1960784f, 0.1960784f, 0.1960784f);
                 var missingColor = new Color(1f, 0f, 1f);
-                Food.GetComponentInChildren<Text>().color = city.Value.food >= cost.Food ? correctColor : missingColor;
-                Wood.GetComponentInChildren<Text>().color = city.Value.wood >= cost.Wood ? correctColor : missingColor;
-                Metal.GetComponentInChildren<Text>().color = city.Value.metal >= cost.Metal ? correctColor : missingColor;
+                Food.GetComponentInChildren<Text>().color = city.Value.currency.Food >= cost.Food ? correctColor : missingColor;
+                Wood.GetComponentInChildren<Text>().color = city.Value.currency.Wood >= cost.Wood ? correctColor : missingColor;
+                Metal.GetComponentInChildren<Text>().color = city.Value.currency.Metal >= cost.Metal ? correctColor : missingColor;
             }
 
             if (Input.GetMouseButton(1))

@@ -41,6 +41,7 @@ public class GameController : MonoBehaviour
         try
         {
             Debug.Log("LoadCity\n" + JsonUtility.ToJson(res, true));
+            Debug.Log("LoadCity\n" + JsonUtility.ToJson(res.City.currency, true));
             State.LoadCity(res.City);
             CityLoader.LoadCity(res.City);
         }

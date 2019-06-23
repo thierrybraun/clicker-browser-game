@@ -37,7 +37,7 @@ namespace API
         private IEnumerator GetRequest<T>(string uri, Action<T> callback)
         {
             string url = endpoint + uri;
-            Debug.Log("GET " + url);
+            // Debug.Log("GET " + url);
             UnityWebRequest request = UnityWebRequest.Get(url);
             request.certificateHandler = new SnakeOilCertificateHandler();
             request.SetRequestHeader("Authorization", "Basic " + credentials);
@@ -49,7 +49,7 @@ namespace API
             }
             else
             {
-                Debug.Log(request.downloadHandler.text);
+                // Debug.Log(request.downloadHandler.text);
                 T res = JsonUtility.FromJson<T>(request.downloadHandler.text);
                 callback(res);
             }
@@ -57,7 +57,7 @@ namespace API
         private IEnumerator PostRequest<T>(string uri, WWWForm data, Action<T> callback)
         {
             string url = endpoint + uri;
-            Debug.Log("Post " + url);
+            // Debug.Log("Post " + url);
 
             UnityWebRequest request = UnityWebRequest.Post(url, data);
             request.certificateHandler = new SnakeOilCertificateHandler();
@@ -70,7 +70,7 @@ namespace API
             }
             else
             {
-                Debug.Log(request.downloadHandler.text);
+                // Debug.Log(request.downloadHandler.text);
                 T res = JsonUtility.FromJson<T>(request.downloadHandler.text);
                 callback(res);
             }

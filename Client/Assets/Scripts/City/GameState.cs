@@ -32,7 +32,6 @@ public class GameState
 
     public void LoadCity(City city)
     {
-        UnityEngine.Debug.Log(city.food + "; " + city.wood + "; " + city.metal);
         CurrentCity = city;
     }
 }

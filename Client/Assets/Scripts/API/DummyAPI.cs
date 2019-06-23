@@ -9,7 +9,7 @@ namespace API
     {
         private struct DbBuilding
         {
-            public ResourceStash Stash;
+            public Currency Stash;
             public DateTime LastQuery;
             public DateTime BuildDate;
         }
@@ -88,8 +88,7 @@ namespace API
                 height = height,
                 fields = fields,
                 tickDuration = tickDuration,
-                wood = 100,
-                metal = 100
+                currency = new Currency { Wood = 100, Metal = 100 }
             };
             return city;
         }
@@ -105,7 +104,7 @@ namespace API
                 var cost = UnityEngine.Resources.Load<Building>("Building/" + buildingType.ToString()).BuildCostFunction.GetCost(1);
 
                 var player = players[cityId];
-                if (city.wood < cost.Wood || city.metal < cost.Metal || city.food < cost.Food)
+                if (city.currency < cost)
                 {
                     callback(new CreateBuildingResponse
                     {
@@ -115,9 +114,7 @@ namespace API
                 }
                 else
                 {
-                    city.food -= cost.Food;
-                    city.wood -= cost.Wood;
-                    city.metal -= cost.Metal;
+                    city.currency -= cost;
                     players[cityId] = player;
 
                     city.fields[y * height + x].buildingType = buildingType;
@@ -125,7 +122,7 @@ namespace API
                     cities[cityId] = city;
                     buildings[cityId][y, x] = new DbBuilding
                     {
-                        Stash = new ResourceStash(),
+                        Stash = new Currency(),
                         BuildDate = DateTime.UtcNow,
                         LastQuery = DateTime.UtcNow
                     };
@@ -191,15 +188,9 @@ namespace API
             var building = buildings[currentCityId][y, x];
 
             var player = players[currentCityId];
-            city.food += building.Stash.Food;
-            city.wood += building.Stash.Wood;
-            city.metal += building.Stash.Metal;
+            city.currency += building.Stash;
 
-            building.Stash.Food = 0;
-            building.Stash.Wood = 0;
-            building.Stash.Metal = 0;
-            building.Stash.X = x;
-            building.Stash.Y = y;
+            building.Stash = new Currency();
 
             buildings[currentCityId][y, x] = building;
             cities[currentCityId] = city;
@@ -208,7 +199,7 @@ namespace API
             {
                 Success = true,
                 Resources = building.Stash,
-                CityResources = city.Currency
+                CityResources = city.currency
             });
         }
 
@@ -226,24 +217,7 @@ namespace API
 
             var production = UnityEngine.Resources.Load<Building>("Building/" + tile.buildingType.ToString()).ProductionFunction.GetProduction(tile.buildingLevel);
 
-            switch (tile.buildingType)
-            {
-                case BuildingType.Applefarm:
-                    building.Stash.Food += ticks * production.Food;
-                    break;
-                case BuildingType.Fishingboat:
-                    building.Stash.Food += ticks * production.Food;
-                    break;
-                case BuildingType.House:
-                    //Food += GetPassedTicks(lastQuery, lastUpdateTime);
-                    break;
-                case BuildingType.Lumberjack:
-                    building.Stash.Wood += ticks * production.Wood;
-                    break;
-                case BuildingType.Mine:
-                    building.Stash.Metal += ticks * production.Metal;
-                    break;
-            }
+            building.Stash += production * ticks;
 
             buildings[cityId][y, x] = building;
 
@@ -266,7 +240,7 @@ namespace API
 
             var cost = UnityEngine.Resources.Load<Building>("Building/" + buildingType.ToString()).BuildCostFunction.GetCostRange(field.buildingLevel, targetLevel);
 
-            if (city.Currency < cost)
+            if (city.currency < cost)
             {
                 callback(new UpgradeResponse
                 {
@@ -276,7 +250,7 @@ namespace API
             }
             else
             {
-                city.Currency -= cost;
+                city.currency -= cost;
                 players[currentCityId] = player;
 
                 buildings[currentCityId][y, x] = building;
