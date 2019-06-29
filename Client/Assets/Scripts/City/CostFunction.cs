@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using UnityEngine;
 
 public abstract class CostFunction : ScriptableObject
@@ -31,5 +32,31 @@ public abstract class CostFunction : ScriptableObject
         }
 
         return targetLevel;
+    }
+
+    private void OnValidate()
+    {
+        WriteToPhp();
+    }
+
+    public void WriteToPhp()
+    {
+        var path = PHPClassWriter.defaultPath;
+        var template = $@"<?php
+require_once 'Currency.php';
+
+/**
+    This class was automatically generated from Unity, do not change!
+**/
+class {name} {{        
+    /** @var Currency */ public $Base;
+    /** @var string */ public $Function = '{GetType().Name}';
+    public function __construct() {{
+        $this->Base = new Currency({Base.Food}, {Base.Wood}, {Base.Metal});
+    }}
+}}
+        ";
+        Directory.CreateDirectory(path);
+        File.WriteAllText(Path.Combine(path, $"{name}.php"), template);
     }
 }
