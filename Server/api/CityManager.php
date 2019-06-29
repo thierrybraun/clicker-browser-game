@@ -1,8 +1,15 @@
 <?php
-declare (strict_types = 1);
+
+declare(strict_types=1);
 
 require_once 'Database.php';
 require_once 'Perlin.php';
+require_once 'generated/GetCityResponse.php';
+require_once 'generated/CreateBuildingResponse.php';
+require_once 'generated/GetStashForTileResponse.php';
+require_once 'generated/Currency.php';
+require_once 'generated/UpgradeResponse.php';
+require_once 'generated/CollectResourcesResponse.php';
 
 class CityManager
 {
@@ -21,12 +28,6 @@ class CityManager
         $this->tickDuration = $tickDuration;
     }
 
-    private function prepareCitySerialization(City $city): City
-    {
-        $city->currency = array('Food' => $city->food, 'Wood' => $city->wood, 'Metal' => $city->metal);
-        return $city;
-    }
-
     /**
      * @param int $playerId
      * @return array
@@ -42,10 +43,7 @@ class CityManager
         $city->width = $size;
         $city->fields = $fields;
 
-        return array(
-            'Success' => true,
-            'City' => $this->prepareCitySerialization($city)
-        );
+        return new GetCityResponse(true, null, $city);
     }
 
     /**
@@ -63,10 +61,7 @@ class CityManager
         $city->width = $size;
         $city->fields = $fields;
 
-        return array(
-            'Success' => true,
-            'City' => $this->prepareCitySerialization($city)
-        );
+        return new GetCityResponse(true, null, $city);
     }
 
     /**
@@ -80,29 +75,16 @@ class CityManager
         $field = $this->db->findField($cityId, $x, $y);
         $city = $this->db->findCityById($cityId);
 
-        $city->food += $field->food;
-        $city->wood += $field->wood;
-        $city->metal += $field->metal;
+        $city->currency->Food += $field->food;
+        $city->currency->Wood += $field->wood;
+        $city->currency->Metal += $field->metal;
         $field->food = 0;
         $field->wood = 0;
         $field->metal = 0;
 
         $this->db->saveField($field);
         $this->db->saveCity($city);
-
-        return array(
-            'Success' => true,
-            'CityResources' => array(
-                'Food' => $city->food,
-                'Wood' => $city->wood,
-                'Metal' => $city->metal,
-            ),
-            'Resources' => array(
-                'Food' => $field->food,
-                'Wood' => $field->wood,
-                'Metal' => $field->metal,
-            )
-        );
+        return new CollectResourcesResponse($city->currency, new Currency($field->food, $field->wood, $field->metal), true);
     }
 
     public function getCostRange(array $baseCost, int $currentLevel, int $targetLevel)
@@ -126,9 +108,9 @@ class CityManager
      */
     public function upgrade(int $cityId)
     {
-        $x = (int)$_POST['x'];
-        $y = (int)$_POST['y'];
-        $targetLevel = (int)$_POST['targetLevel'];
+        $x = (int) $_POST['x'];
+        $y = (int) $_POST['y'];
+        $targetLevel = (int) $_POST['targetLevel'];
 
         $field = $this->db->findField($cityId, $x, $y);
         $city = $this->db->findCityById($cityId);
@@ -147,23 +129,19 @@ class CityManager
         }
 
         $cost = $this->getCostRange($baseCost, $field->buildingLevel, $targetLevel);
-        if ($city->food < $cost['food'] || $city->wood < $cost['wood'] || $city->metal < $cost['metal']) {
-            var_dump($cost);
-            var_dump($city->food);
-            var_dump($city->wood);
-            var_dump($city->metal);
+        if ($city->currency->Food < $cost['food'] || $city->currency->Wood < $cost['wood'] || $city->currency->Metal < $cost['metal']) {
             throw new Exception("Not enough resources");
         }
 
-        $city->food -= $cost['food'];
-        $city->wood -= $cost['wood'];
-        $city->metal -= $cost['metal'];
+        $city->currency->Food -= $cost['food'];
+        $city->currency->Wood -= $cost['wood'];
+        $city->currency->Metal -= $cost['metal'];
         $field->buildingLevel = $targetLevel;
 
         $this->db->saveField($field);
         $this->db->saveCity($city);
 
-        return array('Success' => true);
+        return new UpgradeResponse(true);
     }
 
     /**
@@ -178,8 +156,8 @@ class CityManager
         $field = $this->db->findField($cityId, $x, $y);
         if ($field->lastQuery == 0) $field->lastQuery = $now;
         $ticks = floor($this->getPassedTicks($field->lastQuery, $now));
-        $secondsUntilNextUpdate = (int)ceil(max($field->lastQuery + $this->tickDuration - $now, 0));
-        $secondsFromLastQuery = (int)min($now - $field->lastQuery, $this->tickDuration);
+        $secondsUntilNextUpdate = (int) ceil(max($field->lastQuery + $this->tickDuration - $now, 0));
+        $secondsFromLastQuery = (int) min($now - $field->lastQuery, $this->tickDuration);
 
         $field->lastQuery = $field->lastQuery + ($this->tickDuration * $ticks);
         $level = $field->buildingLevel;
@@ -209,16 +187,7 @@ class CityManager
 
         $this->db->saveField($field);
 
-        return array(
-            'Success' => true,
-            'Resources' => array(
-                'Food' => $field->food,
-                'Wood' => $field->wood,
-                'Metal' => $field->metal,
-            ),
-            'SecondsUntilNextUpdate' => $secondsUntilNextUpdate,
-            'SecondsFromLastUpdate' => $secondsFromLastQuery
-        );
+        return new GetStashForTileResponse(true, null, new Currency($field->food, $field->wood, $field->metal), $secondsUntilNextUpdate, $secondsFromLastQuery);
     }
 
     /**
@@ -230,7 +199,7 @@ class CityManager
      */
     private function getPassedTicks(int $last, int $now): int
     {
-        return (int)floor(($now - $last) / $this->tickDuration);
+        return (int) floor(($now - $last) / $this->tickDuration);
     }
 
     /**
@@ -240,8 +209,8 @@ class CityManager
     public function createBuilding(int $cityId)
     {
         $b = $_POST['building'];
-        $x = (int)$_POST['x'];
-        $y = (int)$_POST['y'];
+        $x = (int) $_POST['x'];
+        $y = (int) $_POST['y'];
 
         if (!isset($b) || !isset($x) || !isset($y)) {
             throw new Exception("Invalid data");
@@ -249,11 +218,11 @@ class CityManager
 
         $field = $this->db->findField($cityId, $x, $y);
         if ($field->buildingType == BuildingType::None) {
-            $field->buildingType = (int)$b;
+            $field->buildingType = (int) $b;
             $field->buildingType = $b;
             $field->buildingLevel = 1;
             $this->db->saveField($field);
-            return array('Success' => true);
+            return new CreateBuildingResponse(true);
         } else {
             throw new Exception("Building already exists");
         }
@@ -265,7 +234,7 @@ class CityManager
      */
     public function createCity(int $playerId)
     {
-        $cityId = (int)$this->db->createCity($playerId);
+        $cityId = (int) $this->db->createCity($playerId);
 
         $terrain = $this->createTerrain($cityId);
 

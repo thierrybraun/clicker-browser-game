@@ -49,9 +49,16 @@ namespace API
             }
             else
             {
-                // Debug.Log(request.downloadHandler.text);
-                T res = JsonUtility.FromJson<T>(request.downloadHandler.text);
-                callback(res);
+                try
+                {
+                    T res = JsonUtility.FromJson<T>(request.downloadHandler.text);
+                    callback(res);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError(e.Message);
+                    Debug.LogError(request.downloadHandler.text);
+                }
             }
         }
         private IEnumerator PostRequest<T>(string uri, WWWForm data, Action<T> callback)
@@ -70,9 +77,16 @@ namespace API
             }
             else
             {
-                // Debug.Log(request.downloadHandler.text);
-                T res = JsonUtility.FromJson<T>(request.downloadHandler.text);
-                callback(res);
+                try
+                {
+                    T res = JsonUtility.FromJson<T>(request.downloadHandler.text);
+                    callback(res);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError(e.Message);
+                    Debug.LogError(request.downloadHandler.text);
+                }
             }
         }
 

@@ -1,5 +1,6 @@
 <?php
-declare (strict_types = 1);
+
+declare(strict_types=1);
 
 /**
  * HTTP verb to use
@@ -74,8 +75,17 @@ class Router
                 }
 
                 header('Content-type:application/json;charset=utf-8');
-                $res = call_user_func($route->callback, ...$this->getPathVariables($path, $route->path));
-                echo json_encode($res);
+                try {
+                    $res = call_user_func($route->callback, ...$this->getPathVariables($path, $route->path));
+                    echo json_encode($res);
+                } catch (Exception $e) {
+                    if ($res == null) {
+                        $res = new stdClass();
+                    }
+                    $res->Success = false;
+                    $res->Error = $e->getMessage();
+                    echo json_encode($res);
+                }
                 return;
             }
         }

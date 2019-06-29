@@ -43,7 +43,9 @@ public class PHPClassWriter
             {typeof(API.City), null},
             {typeof(API.BuildingType), null},
             {typeof(API.ResourceType), null},
-            {typeof(API.Field), null}
+            {typeof(FieldType), null},
+            {typeof(API.Field), null},
+            {typeof(Player), null}
         };
 
         foreach (var task in tasks.Keys.ToList())
@@ -69,10 +71,15 @@ public class PHPClassWriter
     {
         UnityEngine.Debug.Log($"Writing {type.Name} to {filename}.php");
 
+        if (type.IsEnum)
+        {
+            WriteEnum(type, filename, path);
+            return;
+        }
         var members = type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly);
         var membersText = String.Join("\n", members.Select(m => MemberToLine(m)));
-        var constructorParameters = String.Join(", ", members.Select(m => "$" + m.Name));
-        var constructorBody = String.Join("\n", members.Select(m => $"\t\t$this->{m.Name} = ${m.Name};"));
+        var constructorParameters = String.Join(", ", members.Select(m => "$" + m.Name + " = null"));
+        var constructorBody = String.Join("\n", members.Select(m => $"\t\tif (${m.Name} !== null) $this->{m.Name} = ${m.Name};"));
 
         var template = $@"<?php
 /**
@@ -87,6 +94,27 @@ class {type.Name} {{
         ";
         Directory.CreateDirectory(path);
         File.WriteAllText(Path.Combine(path, $"{filename}.php"), template);
+    }
+
+    private static void WriteEnum(Type type, string filename, string path = defaultPath)
+    {
+        var values = type.GetEnumValues();
+        var body = "";
+        for (int i = 0; i < values.Length; i++)
+        {
+            body += "const " + values.GetValue(i) + " = " + i + ";\n";
+        }
+        var template = $@"<?php
+/**
+    This class was automatically generated from Unity, do not change!
+**/
+class {type.Name} {{    
+{body}
+}}
+        ";
+        Directory.CreateDirectory(path);
+        File.WriteAllText(Path.Combine(path, $"{filename}.php"), template);
+
     }
 
     private static String MemberToLine(FieldInfo info, object obj = null)

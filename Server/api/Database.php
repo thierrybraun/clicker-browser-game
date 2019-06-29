@@ -1,82 +1,65 @@
 <?php
-declare (strict_types = 1);
 
-class Player
-{
-    /** @var integer */
-    public $id;
-    /** @var string */
-    public $name;
-    public function __set($name, $value)
-    { }
-}
+declare(strict_types=1);
 
-class City
-{
-    /** @var integer */
-    public $id;
-    /** @var integer */
-    public $idPlayer;
-    /** @var integer */
-    public $food;
-    /** @var integer */
-    public $wood;
-    /** @var integer */
-    public $metal;
-}
+require_once 'generated/City.php';
+require_once 'generated/Player.php';
+require_once 'generated/Field.php';
+require_once 'generated/FieldType.php';
+require_once 'generated/ResourceType.php';
+require_once 'generated/BuildingType.php';
 
-abstract class FieldType
-{
-    const Plain = 0;
-    const Hills = 1;
-    const Water = 2;
-}
-abstract class BuildingType
-{
-    const None = 0;
-    const House = 1;
-    const Applefarm = 2;
-    const Fishingboat = 3;
-    const Lumberjack = 4;
-    const Mine = 5;
-}
+// class Player
+// {
+//     /** @var integer */
+//     public $id;
+//     /** @var string */
+//     public $name;
+//     public function __set($name, $value)
+//     { }
+// }
 
-abstract class ResourceType
-{
-    const  None = 0;
-    const  Apples = 1;
-    const  Fish = 2;
-    const  Forest = 3;
-    const  Ore = 4;
-}
+// class City
+// {
+//     /** @var integer */
+//     public $id;
+//     /** @var integer */
+//     public $idPlayer;
+//     /** @var integer */
+//     public $food;
+//     /** @var integer */
+//     public $wood;
+//     /** @var integer */
+//     public $metal;
+// }
 
-class Field
-{
-    /** @var integer */
-    public $id;
-    /** @var integer */
-    public $idCity;
-    /** @var integer */
-    public $x;
-    /** @var integer */
-    public $y;
-    /** @var integer */
-    public $fieldType;
-    /** @var integer */
-    public $resourceType;
-    /** @var integer */
-    public $buildingType;
-    /** @var integer */
-    public $buildingLevel;
-    /** @var integer */
-    public $food;
-    /** @var integer */
-    public $wood;
-    /** @var integer */
-    public $metal;
-    /** @var integer */
-    public $lastQuery;
-}
+// class Field
+// {
+//     /** @var integer */
+//     public $id;
+//     /** @var integer */
+//     public $idCity;
+//     /** @var integer */
+//     public $x;
+//     /** @var integer */
+//     public $y;
+//     /** @var integer */
+//     public $fieldType;
+//     /** @var integer */
+//     public $resourceType;
+//     /** @var integer */
+//     public $buildingType;
+//     /** @var integer */
+//     public $buildingLevel;
+//     /** @var integer */
+//     public $food;
+//     /** @var integer */
+//     public $wood;
+//     /** @var integer */
+//     public $metal;
+//     /** @var integer */
+//     public $lastQuery;
+// }
 
 class Database
 {
@@ -100,7 +83,7 @@ class Database
         try {
             $this->pdo = new PDO($dsn, $user, $pass, $options);
         } catch (\PDOException $e) {
-            throw new \PDOException($e->getMessage(), (int)$e->getCode());
+            throw new \PDOException($e->getMessage(), (int) $e->getCode());
         }
     }
 
@@ -209,7 +192,7 @@ class Database
         $stmt = $this->pdo->prepare('INSERT INTO player(id, name, password) VALUES (NULL, ?, ?)');
         if (!$stmt->execute([$name, $password])) throw new Exception("Could not create player '$name'");
 
-        $id = (int)$this->pdo->lastInsertId();
+        $id = (int) $this->pdo->lastInsertId();
         return $id;
     }
 
@@ -221,7 +204,7 @@ class Database
     {
         $stmt = $this->pdo->prepare('INSERT INTO city(id, idPlayer, food, wood, metal) VALUES (NULL, ?, 10, 10, 10)');
         $stmt->execute([$playerId]);
-        $cityId = (int)$this->pdo->lastInsertId();
+        $cityId = (int) $this->pdo->lastInsertId();
         return $cityId;
     }
 
@@ -237,7 +220,7 @@ class Database
     {
         $stmt = $this->pdo->prepare('INSERT INTO field(id, idCity, x, y, fieldType, resourceType, buildingType, buildingLevel) VALUES (NULL, ?, ?, ?, ?, ?, 0, 0)');
         $stmt->execute([$cityId, $x, $y, $type, $resource]);
-        return (int)$this->pdo->lastInsertId();
+        return (int) $this->pdo->lastInsertId();
     }
 
     /**
@@ -250,6 +233,7 @@ class Database
         $stmt->execute([$playerId]);
         $city = $stmt->fetchObject('City');
         if ($city == false) throw new Exception("City for user '$playerId' not found");
+        $city->currency = new Currency($city->food, $city->wood, $city->metal);
         return $city;
     }
 
@@ -263,6 +247,7 @@ class Database
         $stmt->execute([$cityId]);
         $city = $stmt->fetchObject('City');
         if ($city == false) throw new Exception("City '$cityId' not found");
+        $city->currency = new Currency($city->food, $city->wood, $city->metal);
         return $city;
     }
 
@@ -326,9 +311,9 @@ class Database
         $stmt->execute([
             $city->id,
             $city->idPlayer,
-            $city->food,
-            $city->wood,
-            $city->metal,
+            $city->currency->Food,
+            $city->currency->Wood,
+            $city->currency->Metal,
             $city->id
         ]);
     }

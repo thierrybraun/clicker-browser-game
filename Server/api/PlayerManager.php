@@ -1,7 +1,9 @@
 <?php
-declare (strict_types = 1);
+
+declare(strict_types=1);
 
 require_once 'Database.php';
+require_once 'generated/GetPlayerResponse.php';
 
 class PlayerManager
 {
@@ -50,17 +52,7 @@ class PlayerManager
      */
     public function getById(int $id)
     {
-        try {
-            return array(
-                'Success' => true,
-                'Player' => $this->db->findPlayerById($id)
-            );
-        } catch (Exception $e) {
-            return array(
-                'Success' => false,
-                'Error' => $e->getMessage()
-            );
-        }
+        return new GetPlayerResponse(true, null, $this->db->findPlayerById($id));
     }
 
     /**
@@ -72,21 +64,7 @@ class PlayerManager
     {
         $reqHeaders = apache_request_headers();
         $creds = explode(':', base64_decode(substr($reqHeaders['Authorization'], 6)));
-        $creds[0];
-
-        $user = $this->db->findPlayerByName($creds[0]);
-
-        try {
-            return array(
-                'Success' => true,
-                'Player' => $this->db->findPlayerByName($creds[0])
-            );
-        } catch (Exception $e) {
-            return array(
-                'Success' => false,
-                'Error' => $e->getMessage()
-            );
-        }
+        return new GetPlayerResponse(true, null, $this->db->findPlayerByName($creds[0]));
     }
 
     /**
