@@ -1,0 +1,6 @@
+Log icon, https://game-icons.net/1x1/delapouite/log.html
+Metal icon, https://game-icons.net/1x1/lorc/metal-bar.html
+Apple icon, https://game-icons.net/1x1/lorc/shiny-apple.html
+Cancel icon, https://game-icons.net/1x1/sbed/cancel.html
+Confirm icon, https://game-icons.net/1x1/delapouite/confirmed.html
+Circle icon, https://game-icons.net/1x1/delapouite/plain-circle.html
