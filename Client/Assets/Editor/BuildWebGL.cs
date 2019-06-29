@@ -10,6 +10,7 @@ class WebGLBuilder
 
         string pathToDeploy = "build/";
 
+        PHPClassWriter.WriteAll();
         BuildPipeline.BuildPlayer(scenes, pathToDeploy, BuildTarget.WebGL, BuildOptions.None);
     }
 }

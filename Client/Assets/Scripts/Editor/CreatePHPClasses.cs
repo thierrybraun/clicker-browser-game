@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class CreatePHPClasses : EditorWindow
 {
-    private Dictionary<Type, bool> generationResults = new Dictionary<Type, bool>();
+    private Dictionary<string, bool> generationResults = new Dictionary<string, bool>();
 
     [MenuItem("PHP/Create PHP Classes")]
     public static void Initialize()
@@ -29,7 +29,7 @@ public class CreatePHPClasses : EditorWindow
         foreach (var task in generationResults)
         {
             GUILayout.BeginHorizontal();
-            GUILayout.Label(task.Key.Name, GUILayout.ExpandWidth(true));
+            GUILayout.Label(task.Key, GUILayout.ExpandWidth(true));
             GUILayout.Label(task.Value ? "✓" : "", GUILayout.ExpandWidth(false));
             GUILayout.EndHorizontal();
         }

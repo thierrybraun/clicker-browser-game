@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 require_once 'Database.php';
 require_once 'Perlin.php';
-require_once 'generated/GetCityResponse.php';
-require_once 'generated/CreateBuildingResponse.php';
-require_once 'generated/GetStashForTileResponse.php';
-require_once 'generated/Currency.php';
-require_once 'generated/UpgradeResponse.php';
-require_once 'generated/CollectResourcesResponse.php';
+
+foreach (scandir(dirname(__FILE__) . '/generated') as $filename) {
+    $path = dirname(__FILE__) . '/generated/' . $filename;
+    if (is_file($path)) {
+        require_once $path;
+    }
+}
 
 class CityManager
 {
@@ -87,16 +88,19 @@ class CityManager
         return new CollectResourcesResponse($city->currency, new Currency($field->food, $field->wood, $field->metal), true);
     }
 
-    public function getCostRange(array $baseCost, int $currentLevel, int $targetLevel)
+    public function getCostRange(Currency $baseCost, int $currentLevel, int $targetLevel)
     {
-        $currencyTypes = array('food', 'wood', 'metal');
-        $current = array();
+        $currencyTypes = array();
+        foreach (new Currency() as $key => $value) {
+            $currencyTypes[] = $key;
+        }
+        $current = new Currency();
         foreach ($currencyTypes as $c) {
-            $current[$c] = 0;
+            $current->$c = 0;
         }
         for ($i = $currentLevel + 1; $i <= $targetLevel; $i++) {
             foreach ($currencyTypes as $c) {
-                $current[$c] += $baseCost[$c] * $i;
+                $current->$c += $baseCost->$c * $i;
             }
         }
         return $current;
@@ -115,27 +119,21 @@ class CityManager
         $field = $this->db->findField($cityId, $x, $y);
         $city = $this->db->findCityById($cityId);
 
-        $baseCost = array(
-            'food' => 0,
-            'wood' => 3,
-            'metal' => 3
-        );
-        if ($field->buildingType == BuildingType::Mine) {
-            $baseCost = array(
-                'food' => 0,
-                'wood' => 3,
-                'metal' => 0
-            );
+        $prodFuncName = BuildingFunctions::$costFunctions[$field->buildingType];
+        $prodFunc = new $prodFuncName();
+        if ($prodFunc->Function !== 'CostFunctionLinear') {
+            throw new Exception("Unsupported function: " . $prodFunc->Function);
         }
 
-        $cost = $this->getCostRange($baseCost, $field->buildingLevel, $targetLevel);
-        if ($city->currency->Food < $cost['food'] || $city->currency->Wood < $cost['wood'] || $city->currency->Metal < $cost['metal']) {
-            throw new Exception("Not enough resources");
-        }
+        $base = $prodFunc->Base;
 
-        $city->currency->Food -= $cost['food'];
-        $city->currency->Wood -= $cost['wood'];
-        $city->currency->Metal -= $cost['metal'];
+        $cost = $this->getCostRange($base, $field->buildingLevel, $targetLevel);
+        foreach ($cost as $key => $value) {
+            if ($city->currency->$key < $value) throw new Exception("Not enough $key");
+        }
+        foreach ($cost as $key => $value) {
+            $city->currency->$key -= $value;
+        }
         $field->buildingLevel = $targetLevel;
 
         $this->db->saveField($field);
@@ -154,6 +152,7 @@ class CityManager
     {
         $now = time();
         $field = $this->db->findField($cityId, $x, $y);
+        if ($field->buildingType === BuildingType::None) return new GetStashForTileResponse(false, "No building on tile");
         if ($field->lastQuery == 0) $field->lastQuery = $now;
         $ticks = floor($this->getPassedTicks($field->lastQuery, $now));
         $secondsUntilNextUpdate = (int) ceil(max($field->lastQuery + $this->tickDuration - $now, 0));
@@ -161,28 +160,16 @@ class CityManager
 
         $field->lastQuery = $field->lastQuery + ($this->tickDuration * $ticks);
         $level = $field->buildingLevel;
-        $production = array(
-            'food' => $level,
-            'wood' => $level,
-            'metal' => $level
-        );
+        $prodFuncName = BuildingFunctions::$productionFunctions[$field->buildingType];
+        $prodFunc = new $prodFuncName();
+        if ($prodFunc->Function !== 'ProductionFunctionLinear') {
+            throw new Exception("Unsupported function: " . $prodFunc->Function);
+        }
 
-        switch ($field->buildingType) {
-            case BuildingType::Applefarm:
-                $field->food += $ticks * $production['food'];
-                break;
-            case BuildingType::Fishingboat:
-                $field->food += $ticks * $production['food'];
-                break;
-            case BuildingType::House:
-                //Food += GetPassedTicks(lastQuery, lastUpdateTime);
-                break;
-            case BuildingType::Lumberjack:
-                $field->wood += $ticks * $production['wood'];
-                break;
-            case BuildingType::Mine:
-                $field->metal += $ticks * $production['metal'];
-                break;
+        $base = $prodFunc->Base;
+        foreach (new Currency() as $key => $value) {
+            $lk = strtolower($key);
+            $field->$lk += $base->$key * $level * $ticks;
         }
 
         $this->db->saveField($field);

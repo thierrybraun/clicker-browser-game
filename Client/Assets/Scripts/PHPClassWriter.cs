@@ -9,9 +9,9 @@ public class PHPClassWriter
 {
     public const string defaultPath = "../Server/api/generated";
 
-    public static Dictionary<Type, bool> WriteAll(string path = defaultPath)
+    public static Dictionary<string, bool> WriteAll(string path = defaultPath)
     {
-        var res = new Dictionary<Type, bool>();
+        var res = new Dictionary<string, bool>();
         foreach (var task in GetAllTasks(path))
         {
             res[task.Key] = false;
@@ -28,29 +28,29 @@ public class PHPClassWriter
         return res;
     }
 
-    public static Dictionary<Type, Action> GetAllTasks(string path = defaultPath)
+    public static Dictionary<string, Action> GetAllTasks(string path = defaultPath)
     {
-        var tasks = new Dictionary<Type, Action> {
-            {typeof(API.AuthenticateResponse), null},
-            {typeof(API.CollectResourcesResponse), null},
-            {typeof(API.CreateBuildingResponse), null},
-            {typeof(API.GetCityResponse), null},
-            {typeof(API.GetPlayerResponse), null},
-            {typeof(API.GetStashForTileResponse), null},
-            {typeof(API.GetVersionResponse), null},
-            {typeof(API.UpgradeResponse), null},
-            {typeof(Currency), null},
-            {typeof(API.City), null},
-            {typeof(API.BuildingType), null},
-            {typeof(API.ResourceType), null},
-            {typeof(FieldType), null},
-            {typeof(API.Field), null},
-            {typeof(Player), null}
+        var tasks = new Dictionary<string, Action>();
+        var classes = new List<Type>{
+            typeof(API.AuthenticateResponse),
+            typeof(API.CollectResourcesResponse),
+            typeof(API.CreateBuildingResponse),
+            typeof(API.GetCityResponse),
+            typeof(API.GetPlayerResponse),
+            typeof(API.GetStashForTileResponse),
+            typeof(API.GetVersionResponse),
+            typeof(API.UpgradeResponse),
+            typeof(Currency),
+            typeof(API.City),
+            typeof(API.BuildingType),
+            typeof(API.ResourceType),
+            typeof(FieldType),
+            typeof(API.Field),
+            typeof(Player)
         };
-
-        foreach (var task in tasks.Keys.ToList())
+        foreach (var task in classes)
         {
-            tasks[task] = () => PHPClassWriter.Write(task, task.Name, path);
+            tasks[task.Name] = () => PHPClassWriter.Write(task, task.Name, path);
         }
 
         var productionFunctions = AssetDatabase.FindAssets("t:ProductionFunction").Select(a => AssetDatabase.LoadAssetAtPath<ProductionFunction>(AssetDatabase.GUIDToAssetPath(a)));
@@ -58,13 +58,49 @@ public class PHPClassWriter
 
         foreach (var task in productionFunctions)
         {
-            tasks[task.GetType()] = () => task.WriteToPhp();
+            tasks[task.name] = () => task.WriteToPhp();
         }
         foreach (var task in costFunctions)
         {
-            tasks[task.GetType()] = () => task.WriteToPhp();
+            tasks[task.name] = () => task.WriteToPhp();
         }
+
+        tasks["Building functions"] = () => WriteBuildingFunctions(path);
+
         return tasks;
+    }
+
+    private static void WriteBuildingFunctions(string path = defaultPath)
+    {
+        var filename = "BuildingFunctions";
+        UnityEngine.Debug.Log($"Writing building functions to {filename}.php");
+
+        var buildings = AssetDatabase.FindAssets("t:Building").Select(a => AssetDatabase.LoadAssetAtPath<Building>(AssetDatabase.GUIDToAssetPath(a)));
+
+        var costs = new List<string>();
+        var prods = new List<string>();
+        foreach (var building in buildings)
+        {
+            var type = ((int)building.ApiType);
+            var cost = building.BuildCostFunction.name;
+            var prod = building.ProductionFunction.name;
+
+            costs.Add($"{type} => \"{cost}\"");
+            prods.Add($"{type} => \"{prod}\"");
+        }
+
+        var template = $@"<?php
+/**
+    This class was automatically generated from Unity, do not change!
+**/
+class {filename} {{    
+    public $costFunctions = array({String.Join(",", costs)});
+    public $productionFunctions = array({String.Join(",", prods)});
+}}
+        ";
+
+        Directory.CreateDirectory(path);
+        File.WriteAllText(Path.Combine(path, $"{filename}.php"), template);
     }
 
     public static void Write(Type type, string filename, string path = defaultPath)
