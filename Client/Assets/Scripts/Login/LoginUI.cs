@@ -68,8 +68,8 @@ namespace Login
                 {
                     DestroyImmediate(api);
                     ApiContainer.AddComponent<RemoteAPI>();
-                    Username.text = "test0";
-                    Password.text = "test0";
+                    Username.text = "";
+                    Password.text = "";
                 }
             }
             else
