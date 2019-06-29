@@ -147,5 +147,13 @@ namespace API
         {
             StartCoroutine(GetRequest<GetVersionResponse>("version", callback));
         }
+
+        public override void Register(string user, string pass, Action<RegistrationResponse> callback)
+        {
+            WWWForm form = new WWWForm();
+            form.AddField("username", user);
+            form.AddField("password", pass);
+            StartCoroutine(PostRequest<RegistrationResponse>("register", form, callback));
+        }
     }
 }

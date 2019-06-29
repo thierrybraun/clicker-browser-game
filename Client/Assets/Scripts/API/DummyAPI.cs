@@ -285,5 +285,14 @@ namespace API
                 Version = "local"
             });
         }
+
+        public override void Register(string user, string pass, Action<RegistrationResponse> callback)
+        {
+            callback(new RegistrationResponse
+            {
+                Success = false,
+                Error = "Not implemented"
+            });
+        }
     }
 }

@@ -35,6 +35,13 @@ namespace API
         public abstract void GetStashForTile(long currentCityId, int x, int y, Action<GetStashForTileResponse> callback);
         public abstract void UpgradeBuilding(long currentCityId, int x, int y, int targetLevel, Action<UpgradeResponse> callback);
         public abstract void GetVersion(Action<GetVersionResponse> callback);
+        public abstract void Register(string user, string pass, Action<RegistrationResponse> callback);
+    }
+
+    public struct RegistrationResponse
+    {
+        public bool Success;
+        public string Error;
     }
 
     public struct AuthenticateResponse
