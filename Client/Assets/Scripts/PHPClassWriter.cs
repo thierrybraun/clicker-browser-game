@@ -94,8 +94,8 @@ public class PHPClassWriter
     This class was automatically generated from Unity, do not change!
 **/
 class {filename} {{    
-    public $costFunctions = array({String.Join(",", costs)});
-    public $productionFunctions = array({String.Join(",", prods)});
+    public static $costFunctions = array({String.Join(",", costs)});
+    public static $productionFunctions = array({String.Join(",", prods)});
 }}
         ";
 
