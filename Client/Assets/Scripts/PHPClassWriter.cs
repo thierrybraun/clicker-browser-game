@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using UnityEditor;
+using UnityEngine;
 
 public class PHPClassWriter
 {
     public const string defaultPath = "../Server/api/generated";
+    public static ProductionFunction[] ProductionFunctions;
+    public static CostFunction[] CostFunctions;
 
     public static Dictionary<string, bool> WriteAll(string path = defaultPath)
     {
@@ -53,16 +55,18 @@ public class PHPClassWriter
             tasks[task.Name] = () => PHPClassWriter.Write(task, task.Name, path);
         }
 
-        var productionFunctions = AssetDatabase.FindAssets("t:ProductionFunction").Select(a => AssetDatabase.LoadAssetAtPath<ProductionFunction>(AssetDatabase.GUIDToAssetPath(a)));
-        var costFunctions = AssetDatabase.FindAssets("t:CostFunction").Select(a => AssetDatabase.LoadAssetAtPath<CostFunction>(AssetDatabase.GUIDToAssetPath(a)));
+        var productionFunctions = Resources.LoadAll("Production", typeof(ProductionFunction));
+        var costFunctions = Resources.LoadAll("Cost", typeof(CostFunction));
+        // var productionFunctions = AssetDatabase.FindAssets("t:ProductionFunction").Select(a => AssetDatabase.LoadAssetAtPath<ProductionFunction>(AssetDatabase.GUIDToAssetPath(a)));
+        // var costFunctions = AssetDatabase.FindAssets("t:CostFunction").Select(a => AssetDatabase.LoadAssetAtPath<CostFunction>(AssetDatabase.GUIDToAssetPath(a)));
 
         foreach (var task in productionFunctions)
         {
-            tasks[task.name] = () => task.WriteToPhp();
+            tasks[task.name] = () => (task as ProductionFunction).WriteToPhp();
         }
         foreach (var task in costFunctions)
         {
-            tasks[task.name] = () => task.WriteToPhp();
+            tasks[task.name] = () => (task as CostFunction).WriteToPhp();
         }
 
         tasks["Building functions"] = () => WriteBuildingFunctions(path);
@@ -75,15 +79,17 @@ public class PHPClassWriter
         var filename = "BuildingFunctions";
         UnityEngine.Debug.Log($"Writing building functions to {filename}.php");
 
-        var buildings = AssetDatabase.FindAssets("t:Building").Select(a => AssetDatabase.LoadAssetAtPath<Building>(AssetDatabase.GUIDToAssetPath(a)));
+        var buildings = Resources.LoadAll("Building", typeof(Building));
+        // var buildings = AssetDatabase.FindAssets("t:Building").Select(a => AssetDatabase.LoadAssetAtPath<Building>(AssetDatabase.GUIDToAssetPath(a)));
 
         var costs = new List<string>();
         var prods = new List<string>();
         foreach (var building in buildings)
         {
-            var type = ((int)building.ApiType);
-            var cost = building.BuildCostFunction.name;
-            var prod = building.ProductionFunction.name;
+            var b = building as Building;
+            var type = ((int)b.ApiType);
+            var cost = b.BuildCostFunction.name;
+            var prod = b.ProductionFunction.name;
 
             costs.Add($"{type} => \"{cost}\"");
             prods.Add($"{type} => \"{prod}\"");
