@@ -1,4 +1,4 @@
-# Clicker Browser Game, a school project
+# Clicker Browser Game
 
 ## Introduction
 In this game, the player creates and manages a city. He builds production buildings, collects resources and improves his buildings. If resources were produced, the player can collect them by clicking on the appearing symbol. In his absence, the game continues and new resources are continually being produced.
@@ -7,6 +7,7 @@ In this game, the player creates and manages a city. He builds production buildi
 ### Requirements
 * Unity3D 2019.1.5
 * docker
+* git lfs
 
 ### Installation
 Build the client with Unity:
