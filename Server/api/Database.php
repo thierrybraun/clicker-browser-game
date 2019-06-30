@@ -317,4 +317,8 @@ class Database
             $city->id
         ]);
     }
+
+    public function deletePlayer(int $id) {
+        
+    }
 }

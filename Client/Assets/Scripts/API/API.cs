@@ -9,7 +9,6 @@ namespace API
 
         public static API Instance { get { return instance; } }
 
-
         protected virtual void Awake()
         {
             DontDestroyOnLoad(gameObject);
@@ -36,8 +35,14 @@ namespace API
         public abstract void UpgradeBuilding(long currentCityId, int x, int y, int targetLevel, Action<UpgradeResponse> callback);
         public abstract void GetVersion(Action<GetVersionResponse> callback);
         public abstract void Register(string user, string pass, Action<RegistrationResponse> callback);
+        public abstract void DeleteAccount(Action<DeleteAccountResponse> callback);
     }
 
+    public struct DeleteAccountResponse
+    {
+        public bool Success;
+        public string Error;
+    }
     public struct RegistrationResponse
     {
         public bool Success;

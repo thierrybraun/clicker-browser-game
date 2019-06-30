@@ -7,7 +7,7 @@ namespace UI
     {
         public enum ButtonType
         {
-            Light, Dark
+            Light, Dark, Danger
         }
 
         public ButtonType Type = ButtonType.Light;
@@ -34,6 +34,10 @@ namespace UI
                     case ButtonType.Dark:
                         text.color = base.skinData.TextLightColor;
                         background.color = base.skinData.ButtonBackgroundDarkColor;
+                        break;
+                    case ButtonType.Danger:
+                        text.color = base.skinData.ButtonTextDangerColor;
+                        background.color = base.skinData.ButtonBackgroundDangerColor;
                         break;
                 }
             }

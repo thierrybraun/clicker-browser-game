@@ -155,5 +155,10 @@ namespace API
             form.AddField("password", pass);
             StartCoroutine(PostRequest<RegistrationResponse>("register", form, callback));
         }
+
+        public override void DeleteAccount(Action<DeleteAccountResponse> callback)
+        {
+            StartCoroutine(PostRequest<DeleteAccountResponse>("deleteaccount", new WWWForm(), callback));
+        }
     }
 }

@@ -23,5 +23,7 @@ namespace UI
         public Color ButtonBackgroundDarkColor;
         public Color ToggleButtonSelectedLightColor;
         public Color ToggleButtonSelectedDarkColor;
+        public Color ButtonTextDangerColor;
+        public Color ButtonBackgroundDangerColor;
     }    
 }

@@ -294,5 +294,14 @@ namespace API
                 Error = "Not implemented"
             });
         }
+
+        public override void DeleteAccount(Action<DeleteAccountResponse> callback)
+        {
+            callback(new DeleteAccountResponse
+            {
+                Success = false,
+                Error = "Not implemented"
+            });
+        }
     }
 }

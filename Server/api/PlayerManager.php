@@ -87,4 +87,13 @@ class PlayerManager
         $id = $this->db->createPlayer($username, password_hash($password, PASSWORD_DEFAULT));
         $this->cityManager->createCity($id);
     }
+
+    public function deleteAccount()
+    {
+        $reqHeaders = apache_request_headers();
+        $creds = explode(':', base64_decode(substr($reqHeaders['Authorization'], 6)));
+        $existing = $this->db->findPlayerByName($creds[0]);
+
+        $this->db->deletePlayer($existing->id);
+    }
 }
