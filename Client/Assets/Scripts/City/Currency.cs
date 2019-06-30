@@ -33,6 +33,18 @@ public struct Currency
             Metal = a.Metal * b
         };
     }
+
+    public override bool Equals(object obj)
+    {
+        if (obj.GetType() != typeof(Currency)) return false;
+        return ((Currency)obj) == this;
+    }
+
+    public override int GetHashCode()
+    {
+        return base.GetHashCode();
+    }
+
     public static bool operator <(Currency a, Currency b) => a.Food < b.Food && a.Wood < b.Wood && a.Metal < b.Metal;
     public static bool operator >(Currency a, Currency b) => a.Food > b.Food && a.Wood > b.Wood && a.Metal > b.Metal;
     public static bool operator <=(Currency a, Currency b) => a.Food <= b.Food && a.Wood <= b.Wood && a.Metal <= b.Metal;
