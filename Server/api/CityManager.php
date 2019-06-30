@@ -31,7 +31,7 @@ class CityManager
 
     /**
      * @param int $playerId
-     * @return array
+     * @return GetCityResponse
      */
     public function getCityByPlayerId(int $playerId)
     {
@@ -49,7 +49,7 @@ class CityManager
 
     /**
      * @param int $cityId
-     * @return array
+     * @return GetCityResponse
      */
     public function getCityById(int $cityId)
     {
@@ -69,7 +69,7 @@ class CityManager
      * @param integer $cityId
      * @param integer $x
      * @param integer $y
-     * @return array
+     * @return CollectResourcesResponse
      */
     public function collect(int $cityId, int $x, int $y)
     {
@@ -88,6 +88,14 @@ class CityManager
         return new CollectResourcesResponse($city->currency, new Currency($field->food, $field->wood, $field->metal), true);
     }
 
+    /**
+     * Calculate the cost to upgrade to $targetLevel
+     *
+     * @param Currency $baseCost
+     * @param integer $currentLevel
+     * @param integer $targetLevel
+     * @return Currency
+     */
     public function getCostRange(Currency $baseCost, int $currentLevel, int $targetLevel)
     {
         $currencyTypes = array();
@@ -108,7 +116,7 @@ class CityManager
 
     /**
      * @param int $cityId
-     * @return array
+     * @return UpgradeResponse
      */
     public function upgrade(int $cityId)
     {
@@ -146,7 +154,7 @@ class CityManager
      * @param integer $cityId
      * @param integer $x
      * @param integer $y
-     * @return array
+     * @return GetStashForTileResponse
      */
     public function getStash(int $cityId, int $x, int $y)
     {
@@ -191,7 +199,7 @@ class CityManager
 
     /**
      * @param int $cityId
-     * @return array
+     * @return CreateBuildingResponse
      */
     public function createBuilding(int $cityId)
     {

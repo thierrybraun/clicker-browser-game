@@ -43,6 +43,7 @@ public class PHPClassWriter
             typeof(API.GetVersionResponse),
             typeof(API.UpgradeResponse),
             typeof(API.DeleteAccountResponse),
+            typeof(API.RegistrationResponse),
             typeof(Currency),
             typeof(API.City),
             typeof(API.BuildingType),

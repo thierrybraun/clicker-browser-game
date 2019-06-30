@@ -26,30 +26,21 @@ class PlayerManager
     /**
      * Register new user
      *
-     * @return void
+     * @return RegistrationResponse
      */
     public function register()
     {
-        try {
-            $username = $_POST['username'];
-            $password = $_POST['password'];
-            $this->createPlayer($username, $password);
-        } catch (\Throwable $th) {
-            return array(
-                'Success' => false,
-                'Error' => $th->getMessage()
-            );
-        }
-        return array(
-            'Success' => true,
-        );
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+        $this->createPlayer($username, $password);
+        return new RegistrationResponse(true);
     }
 
     /**
      * Get player by id
      *
      * @param integer $id
-     * @return array
+     * @return GetPlayerResponse
      */
     public function getById(int $id)
     {
@@ -59,7 +50,7 @@ class PlayerManager
     /**
      * Get player data with credentials from request
      *
-     * @return array
+     * @return GetPlayerResponse
      */
     public function getMe()
     {
