@@ -64,11 +64,20 @@ class Router
 
                 if ($route->requiresAuth) {
                     $reqHeaders = apache_request_headers();
-                    if (!isset($reqHeaders['Authorization']) || !$this->isAuthorized($reqHeaders['Authorization'])) {
+                    try {
+                        if (!isset($reqHeaders['Authorization']) || !$this->isAuthorized($reqHeaders['Authorization'])) {
+                            header('Content-type:application/json;charset=utf-8');
+                            echo json_encode(array(
+                                'Success' => false,
+                                'Error' => 'NotAuthorized'
+                            ));
+                            return;
+                        }
+                    } catch (Exception $e) {
                         header('Content-type:application/json;charset=utf-8');
                         echo json_encode(array(
                             'Success' => false,
-                            'Error' => 'NotAuthorized'
+                            'Error' => $e->getMessage()
                         ));
                         return;
                     }

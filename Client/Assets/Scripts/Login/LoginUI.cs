@@ -19,16 +19,17 @@ namespace Login
         public GameObject LoginPanel, RegistrationPanel;
         public ToggleGroup PanelSelectionGroup;
         public Text Error, RegisterError;
-        public GameObject ApiContainer;
         public Button RegisterButton;
         public Text RegistrationStatus;
+        private GameObject apiContainer;
 
         private void Awake()
         {
             Assert.IsNotNull(Username);
             Assert.IsNotNull(Password);
             Assert.IsNotNull(Error);
-            Assert.IsNotNull(ApiContainer);
+
+            apiContainer = FindObjectOfType<API.API>().gameObject;
 
             Error.text = "";
             RegisterError.text = "";
@@ -42,7 +43,7 @@ namespace Login
             var pass = Password.text;
             var credentials = System.Text.Encoding.UTF8.GetBytes(Username.text + ":" + Password.text);
 
-            var api = ApiContainer.GetComponent<API.API>();
+            var api = apiContainer.GetComponent<API.API>();
             api.Credentials = System.Convert.ToBase64String(credentials);
             api.Authenticate(user, pass, LoginRespose);
         }
@@ -61,13 +62,13 @@ namespace Login
 
         public void SetAPIType(int type)
         {
-            var api = ApiContainer.GetComponent<API.API>();
+            var api = apiContainer.GetComponent<API.API>();
             if (type == 0)
             {
                 if (!(api is RemoteAPI))
                 {
                     DestroyImmediate(api);
-                    ApiContainer.AddComponent<RemoteAPI>();
+                    apiContainer.AddComponent<RemoteAPI>();
                     Username.text = "";
                     Password.text = "";
                 }
@@ -77,13 +78,13 @@ namespace Login
                 if (!(api is DummyAPI))
                 {
                     DestroyImmediate(api);
-                    ApiContainer.AddComponent<DummyAPI>();
+                    apiContainer.AddComponent<DummyAPI>();
                     Username.text = "Player1";
                     Password.text = "Player1";
                 }
             }
             ClientVersion.text = $"Client version: {Version}";
-            ApiContainer.GetComponent<API.API>().GetVersion(res => ApiVersion.text = $"API version: {res.Version}");
+            apiContainer.GetComponent<API.API>().GetVersion(res => ApiVersion.text = $"API version: {res.Version}");
         }
 
         public void Register()
@@ -102,7 +103,7 @@ namespace Login
             }
             var credentials = System.Text.Encoding.UTF8.GetBytes(user + ":" + pass);
 
-            var api = ApiContainer.GetComponent<API.API>();
+            var api = apiContainer.GetComponent<API.API>();
             api.Credentials = System.Convert.ToBase64String(credentials);
             api.Register(user, pass, RegisterResponse);
         }

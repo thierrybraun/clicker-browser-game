@@ -42,6 +42,7 @@ public class PHPClassWriter
             typeof(API.GetStashForTileResponse),
             typeof(API.GetVersionResponse),
             typeof(API.UpgradeResponse),
+            typeof(API.DeleteAccountResponse),
             typeof(Currency),
             typeof(API.City),
             typeof(API.BuildingType),

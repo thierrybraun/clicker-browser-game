@@ -2025,6 +2025,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 470381194}
+  - component: {fileID: 470381195}
   m_Layer: 0
   m_Name: API
   m_TagString: Untagged
@@ -2046,6 +2047,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &470381195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 470381193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b25fd967ff8387f42afe950b35b85d6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &513845334
 GameObject:
   m_ObjectHideFlags: 0
@@ -5187,7 +5200,6 @@ MonoBehaviour:
   PanelSelectionGroup: {fileID: 144920365}
   Error: {fileID: 1228923003}
   RegisterError: {fileID: 388463968}
-  ApiContainer: {fileID: 470381193}
   RegisterButton: {fileID: 399007207}
   RegistrationStatus: {fileID: 359988334}
 --- !u!1 &1845959210

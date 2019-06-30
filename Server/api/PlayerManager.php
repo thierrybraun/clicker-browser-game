@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 require_once 'Database.php';
 require_once 'generated/GetPlayerResponse.php';
+require_once 'generated/DeleteAccountResponse.php';
 
 class PlayerManager
 {
@@ -88,6 +89,11 @@ class PlayerManager
         $this->cityManager->createCity($id);
     }
 
+    /**
+     * Delete a player with his city
+     *
+     * @return DeleteAccountResponse
+     */
     public function deleteAccount()
     {
         $reqHeaders = apache_request_headers();
@@ -95,5 +101,6 @@ class PlayerManager
         $existing = $this->db->findPlayerByName($creds[0]);
 
         $this->db->deletePlayer($existing->id);
+        return new DeleteAccountResponse(true);
     }
 }

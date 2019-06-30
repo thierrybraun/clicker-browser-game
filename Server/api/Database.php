@@ -318,7 +318,23 @@ class Database
         ]);
     }
 
-    public function deletePlayer(int $id) {
-        
+    /**
+     * Delete a player with his city
+     *
+     * @param integer $idPlayer
+     * @return void
+     */
+    public function deletePlayer(int $idPlayer)
+    {
+        $stmt = $this->pdo->prepare('SELECT * FROM city WHERE city.idPlayer = ?');
+        $stmt->execute([$idPlayer]);
+        $cityId = $stmt->fetchColumn();
+
+        $stmt = $this->pdo->prepare('DELETE FROM field WHERE field.idCity = ?');
+        $stmt->execute([$cityId]);
+        $stmt = $this->pdo->prepare('DELETE FROM city WHERE city.id = ?');
+        $stmt->execute([$cityId]);
+        $stmt = $this->pdo->prepare('DELETE FROM player WHERE player.id = ?');
+        $stmt->execute([$idPlayer]);
     }
 }

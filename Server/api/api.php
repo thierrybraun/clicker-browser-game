@@ -29,6 +29,7 @@ $router->get('api/city/{id}', [$cityManager, 'getCityById']);
 $router->get('api/city/{id}/stash/{x}/{y}', [$cityManager, 'getStash']);
 $router->post('api/city/{id}/collect/{x}/{y}', [$cityManager, 'collect']);
 $router->post('api/city/{id}/upgrade', [$cityManager, 'upgrade']);
+$router->post('api/deleteaccount', [$playerManager, 'deleteAccount']);
 
 $router->get('api/version', function () {
     return array('Version' => 'indev');
