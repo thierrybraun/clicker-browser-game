@@ -25,6 +25,10 @@ Run the application:
 docker-compose -f docker-compose.yml up
 ```
 
+Finally setup the database with a POST request to `/admin/setup`. Admin credentials can be found in `docker-compose.yml` under `admin_credentials`.
+
+The mysql password (required to login in phpmyadmin) can also be found in `docker-compose.yml`.
+
 The current configuration create both a production version (`https://localhost`) and a development version (`https://localhost/dev`). The development version is accessing the api files directly from source, while the production version is using the files from the container.
 
 To remove the development version, delete the following lines from the Dockerfile:
