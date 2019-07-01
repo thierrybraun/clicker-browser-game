@@ -96,8 +96,8 @@ class Database
     {
         $this->pdo->query('CREATE TABLE IF NOT EXISTS `player` ( 
             `id` INT NOT NULL AUTO_INCREMENT , 
-            `name` VARCHAR(255) NOT NULL , 
-            `password` VARCHAR(255) NOT NULL , 
+            `name` VARCHAR(191) NOT NULL , 
+            `password` VARCHAR(191) NOT NULL , 
             PRIMARY KEY (`id`), UNIQUE (`name`)) 
             ENGINE = InnoDB;');
 
