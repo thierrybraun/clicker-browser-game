@@ -259,10 +259,12 @@ class CityManager
         $gen = new Perlin($seed);
         $forest = new Perlin($seed + 1);
         $smooth = 4;
-        $gridsize = 20;
+        $gridsize = 15;
         $terrain = array();
         $max = 0;
         $min = 1;
+        $numOre = 0;
+        $numFish = 0;
         for ($y = 0; $y < $gridsize; $y += 1) {
             $terrain[$y] = array();
             for ($x = 0; $x < $gridsize; $x += 1) {
@@ -273,21 +275,23 @@ class CityManager
 
                 if ($num < 0.3) {
                     $terrain[$y][$x] = array(FieldType::Water);
-                    if (mt_rand(0, 1) == 0) {
+                    if ($numFish < 3 || mt_rand(0, 1) == 0) {
                         $terrain[$y][$x][] = ResourceType::Fish;
+                        $numFish++;
                     }
                 } else if ($num < 0.7) {
                     $terrain[$y][$x] = array(FieldType::Plain);
                     $f = ($forest->noise($x, $y, 0, $smooth)  + 1) / 2;
-                    if ($f < 0.3) {
+                    if ($f < 0.5) {
                         $terrain[$y][$x][] = ResourceType::Forest;
                     } else if (mt_rand(0, 1) == 0) {
                         $terrain[$y][$x][] = ResourceType::Apples;
                     }
                 } else {
                     $terrain[$y][$x] = array(FieldType::Hills);
-                    if (mt_rand(0, 1) == 0) {
+                    if ($numOre < 3 || mt_rand(0, 1) == 0) {
                         $terrain[$y][$x][] = ResourceType::Ore;
+                        $numOre++;
                     }
                 }
             }
