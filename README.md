@@ -10,21 +10,35 @@ In this game, the player creates and manages a city. He builds production buildi
 * git lfs
 
 ### Installation
-Build the client with Unity:
+#### Building the client with Unity:
+In a terminal:
 ```
 Unity -batchmode -executeMethod WebGLBuilder.build -projectPath ./Client -nographics -quit
 ```
 
+In Unity:
+* Generate PHP classes using the main menu entry under PHP
+* Select WebGL platform
+* Build to Client/build
+
+#### Building the backend
 Build the backend docker container:
 ```
 docker build -t projekt-php-2019 .
 ```
+Without docker:
+* Copy Server/api to <site>/api
+* Copy Client/build/* to <site>/
+* Create a database with utf8mb4 and add the user specified in Server/api/Database.php
+* Modify Server/api/Database.php connection variables to your configuration
+* Add `SetEnv admin\_credentials admin:<adminpassword>` to .htaccess
 
-Run the application:
+#### Run the application:
 ```
 docker-compose -f docker-compose.yml up
 ```
 
+#### Create database tables
 Finally setup the database with a POST request to `/admin/setup`. Admin credentials can be found in `docker-compose.yml` under `admin_credentials`.
 
 The mysql password (required to login in phpmyadmin) can also be found in `docker-compose.yml`.
